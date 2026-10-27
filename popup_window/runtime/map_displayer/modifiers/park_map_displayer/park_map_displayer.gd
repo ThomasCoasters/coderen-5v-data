@@ -85,6 +85,16 @@ func refresh_image(park: ParkID) -> void:
 	
 	
 	if current_tile_settings.cords_unidentified():
+		var error_popup: AcceptDialog = AcceptDialog.new()
+		error_popup.title = "Error! Sorry :("
+		error_popup.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_SCREEN_WITH_MOUSE_FOCUS
+		error_popup.dialog_text = "Due to an error in the data this program uses, the map display for %s has no attractions, and thus will be displaying a rough area. The attraction marker modifier will also be useless." %park.name
+		error_popup.ok_button_text = "I understand."
+		error_popup.dialog_autowrap = true
+		error_popup.visible = true
+		error_popup.size = Vector2i(400, 200)
+		add_child(error_popup)
+		
 		var park_tile: Vector2i = _lon_lat_to_tile(
 			park.longitude,
 			park.latitude,

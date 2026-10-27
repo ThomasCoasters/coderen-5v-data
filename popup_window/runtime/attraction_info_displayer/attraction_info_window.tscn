@@ -21,7 +21,7 @@ corner_radius_bottom_left = 20
 transparent_bg = true
 oversampling_override = 1.0
 title = " - Info"
-initial_position = 1
+initial_position = 4
 size = Vector2i(500, 791)
 unresizable = true
 borderless = true
@@ -46,7 +46,15 @@ window_name = " - Info"
 metadata/_custom_type_script = "uid://wyrg2bi6c1nu"
 
 [node name="LiveDataRefreshTimer" type="Timer" parent="." unique_id=933698250]
-wait_time = 60.0
+unique_name_in_owner = true
+wait_time = 300.0
+one_shot = true
+
+[node name="LiveHTTPRequest" type="HTTPRequest" parent="." unique_id=1512073711]
+unique_name_in_owner = true
+
+[node name="DailyHTTPRequest" type="HTTPRequest" parent="." unique_id=1030117784]
+unique_name_in_owner = true
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1255319670]
 anchors_preset = 15
@@ -59,8 +67,6 @@ theme_override_constants/separation = 0
 [node name="Control" type="Control" parent="VBoxContainer" unique_id=1135621305]
 layout_mode = 2
 size_flags_vertical = 3
-mouse_filter = 2
-mouse_behavior_recursive = 1
 
 [node name="ColorRect" type="ColorRect" parent="VBoxContainer/Control" unique_id=498789059]
 layout_mode = 1
@@ -95,7 +101,26 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
+[node name="CurrentWindowStatusLabel" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer" unique_id=1405726725]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 45
+text = "Loading Please Wait..."
+horizontal_alignment = 1
+clip_text = true
+visible_characters = 0
+visible_characters_behavior = 1
+visible_ratio = 0.0
+
+[node name="CurrentWindowStatusTimer" type="Timer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/CurrentWindowStatusLabel" unique_id=2012358994]
+unique_name_in_owner = true
+wait_time = 0.05
+one_shot = true
+autostart = true
+
 [node name="LiveDataPanelContainer" type="PanelContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer" unique_id=552625751]
+unique_name_in_owner = true
+visible = false
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_3wy1v")
 
@@ -111,11 +136,28 @@ theme_override_constants/margin_bottom = 5
 layout_mode = 2
 alignment = 1
 
-[node name="Label2" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer" unique_id=1285674634]
+[node name="LiveDataLabel" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer" unique_id=1285674634]
 layout_mode = 2
 theme = ExtResource("3_4edgx")
 theme_override_font_sizes/font_size = 40
 text = "Live Data"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer" unique_id=828249612]
+layout_mode = 2
+alignment = 1
+
+[node name="LiveDataUpdateLabel" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1462001862]
+layout_mode = 2
+theme = ExtResource("3_4edgx")
+text = "Last Updated (Park's Local Time):"
+horizontal_alignment = 1
+
+[node name="LiveDataUpdateTimeLabel" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1547871931]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("3_4edgx")
+text = "NEVER"
 horizontal_alignment = 1
 
 [node name="CurrentStatusPanelContainer" type="PanelContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer" unique_id=1951320733]
@@ -125,10 +167,10 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_3wy1v")
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/CurrentStatusPanelContainer" unique_id=16715842]
 layout_mode = 2
 size_flags_vertical = 19
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 5
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 5
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/CurrentStatusPanelContainer/MarginContainer" unique_id=1756980548]
 layout_mode = 2
@@ -137,8 +179,8 @@ alignment = 1
 [node name="Label" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/CurrentStatusPanelContainer/MarginContainer/HBoxContainer" unique_id=1715222503]
 layout_mode = 2
 theme = ExtResource("3_4edgx")
-theme_override_font_sizes/font_size = 40
-text = "Queue Time:    "
+theme_override_font_sizes/font_size = 28
+text = "Current Status: "
 horizontal_alignment = 1
 
 [node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/CurrentStatusPanelContainer/MarginContainer/HBoxContainer" unique_id=1963776654]
@@ -148,62 +190,66 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_3wy1v")
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/CurrentStatusPanelContainer/MarginContainer/HBoxContainer/PanelContainer" unique_id=996108275]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 5
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 5
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 2
 
-[node name="CurrentQueueTimeLabel" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/CurrentStatusPanelContainer/MarginContainer/HBoxContainer/PanelContainer/MarginContainer" unique_id=1060298044]
+[node name="CurrentStatusLabel" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/CurrentStatusPanelContainer/MarginContainer/HBoxContainer/PanelContainer/MarginContainer" unique_id=1060298044]
+unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 35
-text = "85"
+theme_override_font_sizes/font_size = 25
+text = "NOT FOUND"
 
-[node name="QueueTimePanelContainer" type="PanelContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer" unique_id=551857501]
+[node name="QueueTimePanelContainer" type="PanelContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer" unique_id=122440915]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_3wy1v")
 
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer" unique_id=2082281992]
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer" unique_id=922144444]
 layout_mode = 2
 size_flags_vertical = 19
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 5
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 5
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer" unique_id=542512193]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer" unique_id=1640157768]
 layout_mode = 2
 alignment = 1
 
-[node name="Label" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer" unique_id=503599700]
+[node name="Label" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer" unique_id=953820200]
 layout_mode = 2
 theme = ExtResource("3_4edgx")
-theme_override_font_sizes/font_size = 40
+theme_override_font_sizes/font_size = 28
 text = "Queue Time:    "
 horizontal_alignment = 1
 
-[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer" unique_id=471059637]
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer" unique_id=226765926]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_3wy1v")
 
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer/PanelContainer" unique_id=1863916317]
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer/PanelContainer" unique_id=432403720]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 5
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 5
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 2
 
-[node name="CurrentQueueTimeLabel" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer/PanelContainer/MarginContainer" unique_id=1736555345]
+[node name="CurrentQueueTimeLabel" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer/PanelContainer/MarginContainer" unique_id=2054222315]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 35
-text = "85"
+theme_override_font_sizes/font_size = 25
+text = "0"
 
-[node name="LiveDataPanelContainer2" type="PanelContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer" unique_id=1306301665]
+[node name="DailyDataPanelContainer" type="PanelContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer" unique_id=1998255226]
+unique_name_in_owner = true
+visible = false
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_3wy1v")
 
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer2" unique_id=1218314987]
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer" unique_id=1616713595]
 layout_mode = 2
 size_flags_vertical = 19
 theme_override_constants/margin_left = 10
@@ -211,93 +257,251 @@ theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 5
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer2/MarginContainer" unique_id=945183256]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer" unique_id=1884954287]
 layout_mode = 2
 alignment = 1
 
-[node name="Label2" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer2/MarginContainer/VBoxContainer" unique_id=1749383048]
+[node name="DailyDataLabel" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer" unique_id=1024646953]
 layout_mode = 2
 theme = ExtResource("3_4edgx")
 theme_override_font_sizes/font_size = 40
 text = "Daily Data"
 horizontal_alignment = 1
 
-[node name="QueueTimePanelContainer" type="PanelContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer2/MarginContainer/VBoxContainer" unique_id=1954234201]
+[node name="TimeDataPanelContainer" type="PanelContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer" unique_id=849719728]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_3wy1v")
 
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer2/MarginContainer/VBoxContainer/QueueTimePanelContainer" unique_id=1280371465]
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimeDataPanelContainer" unique_id=313073378]
 layout_mode = 2
 size_flags_vertical = 19
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 5
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 5
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer2/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer" unique_id=24454799]
+[node name="HBoxContainer" type="VBoxContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimeDataPanelContainer/MarginContainer" unique_id=1659883492]
 layout_mode = 2
 alignment = 1
 
-[node name="Label" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer2/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer" unique_id=1180214502]
+[node name="Label" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimeDataPanelContainer/MarginContainer/HBoxContainer" unique_id=2108197892]
 layout_mode = 2
 theme = ExtResource("3_4edgx")
-theme_override_font_sizes/font_size = 40
-text = "Queue Time:    "
+theme_override_font_sizes/font_size = 28
+text = "Time Data"
 horizontal_alignment = 1
 
-[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer2/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer" unique_id=181105956]
+[node name="TimePanelContainer" type="PanelContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimeDataPanelContainer/MarginContainer/HBoxContainer" unique_id=361528944]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_3wy1v")
 
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer2/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer/PanelContainer" unique_id=1034506172]
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimeDataPanelContainer/MarginContainer/HBoxContainer/TimePanelContainer" unique_id=2045671697]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 5
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 5
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 2
 
-[node name="CurrentQueueTimeLabel" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer2/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer/PanelContainer/MarginContainer" unique_id=958489702]
+[node name="GridContainer" type="VBoxContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimeDataPanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer" unique_id=2013878321]
 layout_mode = 2
-theme_override_font_sizes/font_size = 35
+
+[node name="OperationHBoxContainer" type="HBoxContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimeDataPanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer" unique_id=246617467]
+layout_mode = 2
+alignment = 1
+
+[node name="OperatingMinutesNameLabel" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimeDataPanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer/OperationHBoxContainer" unique_id=1066073250]
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "Operating Minutes:       "
+
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimeDataPanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer/OperationHBoxContainer" unique_id=1399106529]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_3wy1v")
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimeDataPanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer/OperationHBoxContainer/PanelContainer" unique_id=1122492804]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 2
+
+[node name="OperatingMinutesTimeLabel" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimeDataPanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer/OperationHBoxContainer/PanelContainer/MarginContainer" unique_id=1901389919]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "436"
+
+[node name="ClosedHBoxContainer" type="HBoxContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimeDataPanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer" unique_id=293662777]
+layout_mode = 2
+alignment = 1
+
+[node name="ClosedMinutesNameLabel" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimeDataPanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer/ClosedHBoxContainer" unique_id=366060491]
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "Down Minutes:              "
+
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimeDataPanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer/ClosedHBoxContainer" unique_id=1406966732]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_3wy1v")
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimeDataPanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer/ClosedHBoxContainer/PanelContainer" unique_id=307532553]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 2
+
+[node name="ClosedMinutesTimeLabel" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimeDataPanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer/ClosedHBoxContainer/PanelContainer/MarginContainer" unique_id=1979209168]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "436"
+
+[node name="UnknownHBoxContainer" type="HBoxContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimeDataPanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer" unique_id=1541627255]
+layout_mode = 2
+alignment = 1
+
+[node name="UnknownMinutesNameLabel" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimeDataPanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer/UnknownHBoxContainer" unique_id=1290368006]
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "Unknown Minutes:        "
+
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimeDataPanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer/UnknownHBoxContainer" unique_id=1558895968]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_3wy1v")
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimeDataPanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer/UnknownHBoxContainer/PanelContainer" unique_id=1805469098]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 2
+
+[node name="UnknownMinutesTimeLabel" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimeDataPanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer/UnknownHBoxContainer/PanelContainer/MarginContainer" unique_id=972608190]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "436"
+
+[node name="QueueTimePanelContainer" type="PanelContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer" unique_id=1014938411]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_3wy1v")
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer" unique_id=526616123]
+layout_mode = 2
+size_flags_vertical = 19
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 2
+
+[node name="HBoxContainer" type="VBoxContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer" unique_id=1279545471]
+layout_mode = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer" unique_id=1813320448]
+layout_mode = 2
+theme = ExtResource("3_4edgx")
+theme_override_font_sizes/font_size = 28
+text = "Queue Times"
+horizontal_alignment = 1
+
+[node name="TimePanelContainer" type="PanelContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer" unique_id=2036997068]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_3wy1v")
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer/TimePanelContainer" unique_id=423271484]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 2
+
+[node name="GridContainer" type="VBoxContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer" unique_id=105469361]
+layout_mode = 2
+
+[node name="MinHBoxContainer" type="HBoxContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer" unique_id=1412757668]
+layout_mode = 2
+alignment = 1
+
+[node name="MinimumMinutesNameLabel" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer/MinHBoxContainer" unique_id=310149635]
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "Minimum Minutes:       "
+
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer/MinHBoxContainer" unique_id=868801424]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_3wy1v")
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer/MinHBoxContainer/PanelContainer" unique_id=104659031]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 2
+
+[node name="MinimumMinutesTimeLabel" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer/MinHBoxContainer/PanelContainer/MarginContainer" unique_id=1974068853]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
 text = "85"
 
-[node name="QueueTimePanelContainer2" type="PanelContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer2/MarginContainer/VBoxContainer" unique_id=763406830]
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_3wy1v")
-
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer2/MarginContainer/VBoxContainer/QueueTimePanelContainer2" unique_id=5638501]
-layout_mode = 2
-size_flags_vertical = 19
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 5
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 5
-
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer2/MarginContainer/VBoxContainer/QueueTimePanelContainer2/MarginContainer" unique_id=748761363]
+[node name="MaxHBoxContainer" type="HBoxContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer" unique_id=1488553178]
 layout_mode = 2
 alignment = 1
 
-[node name="Label" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer2/MarginContainer/VBoxContainer/QueueTimePanelContainer2/MarginContainer/HBoxContainer" unique_id=1668192541]
+[node name="MaxMinutesNameLabel" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer/MaxHBoxContainer" unique_id=1730161870]
 layout_mode = 2
-theme = ExtResource("3_4edgx")
-theme_override_font_sizes/font_size = 40
-text = "Queue Time:    "
-horizontal_alignment = 1
+theme_override_font_sizes/font_size = 25
+text = "Maximum Minutes:      "
 
-[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer2/MarginContainer/VBoxContainer/QueueTimePanelContainer2/MarginContainer/HBoxContainer" unique_id=768775392]
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer/MaxHBoxContainer" unique_id=1404564226]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_3wy1v")
 
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer2/MarginContainer/VBoxContainer/QueueTimePanelContainer2/MarginContainer/HBoxContainer/PanelContainer" unique_id=1052952364]
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer/MaxHBoxContainer/PanelContainer" unique_id=1392717145]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 5
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 5
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 2
 
-[node name="CurrentQueueTimeLabel" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer2/MarginContainer/VBoxContainer/QueueTimePanelContainer2/MarginContainer/HBoxContainer/PanelContainer/MarginContainer" unique_id=843719492]
+[node name="MaximumMinutesTimeLabel" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer/MaxHBoxContainer/PanelContainer/MarginContainer" unique_id=958706433]
+unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 35
+theme_override_font_sizes/font_size = 25
+text = "85"
+
+[node name="AverageHBoxContainer" type="HBoxContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer" unique_id=311549]
+layout_mode = 2
+alignment = 1
+
+[node name="AverageMinutesNameLabel" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer/AverageHBoxContainer" unique_id=1778714827]
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "Average Minutes:          "
+
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer/AverageHBoxContainer" unique_id=394691325]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_3wy1v")
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer/AverageHBoxContainer/PanelContainer" unique_id=143303806]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 2
+
+[node name="AverageMinutesTimeLabel" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer/AverageHBoxContainer/PanelContainer/MarginContainer" unique_id=45123937]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
 text = "85"
