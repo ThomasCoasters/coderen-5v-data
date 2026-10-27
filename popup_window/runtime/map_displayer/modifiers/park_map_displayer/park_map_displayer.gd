@@ -43,6 +43,7 @@ var free_http_requesters: Array[HTTPRequest]
 var padded_pixels_northwest: Vector2
 var padded_pixels_southeast: Vector2
 
+var current_image_scale: float
 
 func _enter_tree() -> void:
 	max_size = Vector2i(Vector2(DisplayServer.screen_get_size()) * max_screen_scale_size)
@@ -172,8 +173,10 @@ func _start_tile_grid_queue() -> void:
 	
 	var image_size: Vector2i = stitched_image.get_size()
 	if image_size.x > max_size.x or image_size.y > max_size.y:
-		var lowest_scale: float = min(max_size.x / image_size.x, max_size.y / image_size.y)
-		image_size = image_size * lowest_scale
+		current_image_scale = min(max_size.x / image_size.x, max_size.y / image_size.y)
+		image_size = image_size * current_image_scale
+	else:
+		current_image_scale = 1.0
 	
 	stitched_image.resize(image_size.x, image_size.y)
 	var image_texture: ImageTexture = ImageTexture.create_from_image(stitched_image)
@@ -250,10 +253,14 @@ static func _lon_lat_to_pixel(
 	lon: float,
 	lat: float,
 	tile_settings: TileSettings,
-	padded_px_nw: Vector2
+	padded_px_nw: Vector2,
+	image_scale: float
 ) -> Vector2:
 	var world_pixel = _lon_lat_to_world_pixel(lon, lat, tile_settings.zoom)
-	return Vector2(world_pixel.x - padded_px_nw.x, world_pixel.y - padded_px_nw.y)
+	return Vector2(
+		world_pixel.x - padded_px_nw.x,
+		world_pixel.y - padded_px_nw.y
+	) * image_scale
 
 func _calculate_tiles() -> Vector2i:
 	var delta_lon = max(current_tile_settings.max_lon - current_tile_settings.min_lon, 0.0001)

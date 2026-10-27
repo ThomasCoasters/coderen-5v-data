@@ -8,13 +8,13 @@ transparent_bg = true
 oversampling_override = 1.0
 title = "Park Selection"
 initial_position = 1
-size = Vector2i(900, 1000)
+size = Vector2i(800, 900)
 unresizable = true
 borderless = true
 transparent = true
 minimize_disabled = true
 maximize_disabled = true
-content_scale_size = Vector2i(900, 1000)
+content_scale_size = Vector2i(800, 900)
 script = ExtResource("1_cd3np")
 setup_done = true
 window_name = "Park Selection"
@@ -41,15 +41,6 @@ theme_override_constants/separation = 0
 [node name="Control" type="Control" parent="VBoxContainer" unique_id=1135621305]
 layout_mode = 2
 size_flags_vertical = 3
-
-[node name="ColorRect" type="ColorRect" parent="VBoxContainer/Control" unique_id=498789059]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.11764706, 0.11764706, 0.11764706, 1)
 
 [node name="Modifiers" type="Control" parent="VBoxContainer/Control" unique_id=766602167]
 layout_mode = 1

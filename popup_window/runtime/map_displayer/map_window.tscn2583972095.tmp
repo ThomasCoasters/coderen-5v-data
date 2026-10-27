@@ -1,0 +1,95 @@
+[gd_scene format=3 uid="uid://5eu55bhv4a8w"]
+
+[ext_resource type="Script" uid="uid://b02nw2s1mi36j" path="res://popup_window/runtime/map_displayer/map_window.gd" id="1_ejaqx"]
+[ext_resource type="Script" uid="uid://buwl8kix3gf5p" path="res://desktop_icons/runtime/generated_desktop_icon_settings.gd" id="2_67vt5"]
+[ext_resource type="Script" uid="uid://dryu213407es1" path="res://desktop_icons/icon_scripts/default_icon_script.gd" id="3_y1n5v"]
+[ext_resource type="Script" uid="uid://df67yf61f3bjk" path="res://desktop_icons/runtime/generated_window_settings.gd" id="4_fv6o0"]
+[ext_resource type="Script" uid="uid://ckglbq63wh5h3" path="res://popup_window/runtime/map_displayer/modifiers/attraction_marker_display/attraction_marker_display_modifier.gd" id="4_p4txh"]
+[ext_resource type="Texture2D" uid="uid://wtmvjebpaw26" path="res://desktop_icons/visuals/map.svg" id="6_755vl"]
+[ext_resource type="Script" uid="uid://7svw3f7qhhnl" path="res://popup_window/runtime/map_displayer/modifiers/park_map_displayer/park_map_displayer.gd" id="7_qs7ew"]
+
+[sub_resource type="Resource" id="Resource_vf8wm"]
+script = ExtResource("4_fv6o0")
+backup_window_scene_path = "res://popup_window/runtime/map_displayer/map_window.tscn"
+is_modifier = true
+modifier_script = ExtResource("4_p4txh")
+metadata/_custom_type_script = "uid://df67yf61f3bjk"
+
+[sub_resource type="Resource" id="Resource_p4txh"]
+resource_local_to_scene = true
+script = ExtResource("2_67vt5")
+name = "Show Attractions"
+visual_icon_path = "res://desktop_icons/visuals/map.ico"
+window_settings = SubResource("Resource_vf8wm")
+metadata/_custom_type_script = "uid://buwl8kix3gf5p"
+
+[node name="MapWindow" type="Window" unique_id=1005423658 node_paths=PackedStringArray("modifier_parent_node", "border_parent_override")]
+transparent_bg = true
+oversampling_override = 1.0
+title = " - Park Map"
+position = Vector2i(120, 60)
+size = Vector2i(1920, 1111)
+unresizable = true
+borderless = true
+transparent = true
+minimize_disabled = true
+maximize_disabled = true
+content_scale_size = Vector2i(1920, 1111)
+content_scale_mode = 1
+content_scale_aspect = 1
+script = ExtResource("1_ejaqx")
+setup_done = true
+window_name = " - Park Map"
+initial_desktop_icons = Array[ExtResource("2_67vt5")]([SubResource("Resource_p4txh")])
+modifier_parent_node = NodePath("VBoxContainer/Control/Modifiers")
+border_parent_override = NodePath("VBoxContainer")
+border_index_override = 0
+border_properties = Dictionary[StringName, Variant]({
+&"global_dragging": true,
+&"window_icon": ExtResource("6_755vl"),
+&"window_name": "Park Map"
+})
+global_dragging = true
+window_icon = ExtResource("6_755vl")
+window_name = " - Park Map"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1767954796]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 0
+
+[node name="Control" type="Control" parent="VBoxContainer" unique_id=676515119]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+mouse_behavior_recursive = 1
+
+[node name="ParkMapDisplayer" type="TextureRect" parent="VBoxContainer/Control" unique_id=1102612136]
+unique_name_in_owner = true
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+size_flags_vertical = 3
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 2
+script = ExtResource("7_qs7ew")
+padding_pixels = 100
+backup_zoom = 17
+metadata/_custom_type_script = "uid://7svw3f7qhhnl"
+
+[node name="Modifiers" type="Control" parent="VBoxContainer/Control" unique_id=47573917]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+mouse_filter = 2
+mouse_behavior_recursive = 1
+
+[connection signal="close_requested" from="." to="." method="_on_close_requested"]

@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://bwhcu1xw36hy" path="res://popup_window/runtime/attraction_info_displayer/attraction_info_window.gd" id="1_o31ah"]
 [ext_resource type="Texture2D" uid="uid://dkoyoabr5b3xh" path="res://popup_window/runtime/map_displayer/visuals/attraction_marker.svg" id="2_o31ah"]
+[ext_resource type="Theme" uid="uid://dd3of3q6suro4" path="res://main/base_theme.tres" id="3_4edgx"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3wy1v"]
 bg_color = Color(0.6, 0.6, 0.6, 0.42352942)
@@ -39,7 +40,13 @@ border_properties = Dictionary[StringName, Variant]({
 &"window_icon": ExtResource("2_o31ah"),
 &"window_name": "App Window"
 })
+global_dragging = false
+window_icon = ExtResource("2_o31ah")
+window_name = " - Info"
 metadata/_custom_type_script = "uid://wyrg2bi6c1nu"
+
+[node name="LiveDataRefreshTimer" type="Timer" parent="." unique_id=933698250]
+wait_time = 60.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1255319670]
 anchors_preset = 15
@@ -75,7 +82,7 @@ size_flags_vertical = 3
 mouse_filter = 2
 mouse_behavior_recursive = 1
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Control" unique_id=601930718]
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/Control" unique_id=1069599647]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -83,15 +90,214 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/Control/VBoxContainer" unique_id=551857501]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Control/ScrollContainer" unique_id=601930718]
 layout_mode = 2
-size_flags_vertical = 19
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="LiveDataPanelContainer" type="PanelContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer" unique_id=552625751]
+layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_3wy1v")
 
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Control/VBoxContainer/PanelContainer" unique_id=2082281992]
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer" unique_id=603224533]
 layout_mode = 2
 size_flags_vertical = 19
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer" unique_id=639820047]
+layout_mode = 2
+alignment = 1
+
+[node name="Label2" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer" unique_id=1285674634]
+layout_mode = 2
+theme = ExtResource("3_4edgx")
+theme_override_font_sizes/font_size = 40
+text = "Live Data"
+horizontal_alignment = 1
+
+[node name="CurrentStatusPanelContainer" type="PanelContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer" unique_id=1951320733]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_3wy1v")
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/CurrentStatusPanelContainer" unique_id=16715842]
+layout_mode = 2
+size_flags_vertical = 19
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/CurrentStatusPanelContainer/MarginContainer" unique_id=1756980548]
+layout_mode = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/CurrentStatusPanelContainer/MarginContainer/HBoxContainer" unique_id=1715222503]
+layout_mode = 2
+theme = ExtResource("3_4edgx")
+theme_override_font_sizes/font_size = 40
+text = "Queue Time:    "
+horizontal_alignment = 1
+
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/CurrentStatusPanelContainer/MarginContainer/HBoxContainer" unique_id=1963776654]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_3wy1v")
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/CurrentStatusPanelContainer/MarginContainer/HBoxContainer/PanelContainer" unique_id=996108275]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="CurrentQueueTimeLabel" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/CurrentStatusPanelContainer/MarginContainer/HBoxContainer/PanelContainer/MarginContainer" unique_id=1060298044]
+layout_mode = 2
+theme_override_font_sizes/font_size = 35
+text = "85"
+
+[node name="QueueTimePanelContainer" type="PanelContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer" unique_id=551857501]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_3wy1v")
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer" unique_id=2082281992]
+layout_mode = 2
+size_flags_vertical = 19
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer" unique_id=542512193]
+layout_mode = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer" unique_id=503599700]
+layout_mode = 2
+theme = ExtResource("3_4edgx")
+theme_override_font_sizes/font_size = 40
+text = "Queue Time:    "
+horizontal_alignment = 1
+
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer" unique_id=471059637]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_3wy1v")
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer/PanelContainer" unique_id=1863916317]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="CurrentQueueTimeLabel" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer/PanelContainer/MarginContainer" unique_id=1736555345]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 35
+text = "85"
+
+[node name="LiveDataPanelContainer2" type="PanelContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer" unique_id=1306301665]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_3wy1v")
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer2" unique_id=1218314987]
+layout_mode = 2
+size_flags_vertical = 19
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer2/MarginContainer" unique_id=945183256]
+layout_mode = 2
+alignment = 1
+
+[node name="Label2" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer2/MarginContainer/VBoxContainer" unique_id=1749383048]
+layout_mode = 2
+theme = ExtResource("3_4edgx")
+theme_override_font_sizes/font_size = 40
+text = "Daily Data"
+horizontal_alignment = 1
+
+[node name="QueueTimePanelContainer" type="PanelContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer2/MarginContainer/VBoxContainer" unique_id=1954234201]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_3wy1v")
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer2/MarginContainer/VBoxContainer/QueueTimePanelContainer" unique_id=1280371465]
+layout_mode = 2
+size_flags_vertical = 19
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer2/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer" unique_id=24454799]
+layout_mode = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer2/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer" unique_id=1180214502]
+layout_mode = 2
+theme = ExtResource("3_4edgx")
+theme_override_font_sizes/font_size = 40
+text = "Queue Time:    "
+horizontal_alignment = 1
+
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer2/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer" unique_id=181105956]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_3wy1v")
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer2/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer/PanelContainer" unique_id=1034506172]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="CurrentQueueTimeLabel" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer2/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer/PanelContainer/MarginContainer" unique_id=958489702]
+layout_mode = 2
+theme_override_font_sizes/font_size = 35
+text = "85"
+
+[node name="QueueTimePanelContainer2" type="PanelContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer2/MarginContainer/VBoxContainer" unique_id=763406830]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_3wy1v")
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer2/MarginContainer/VBoxContainer/QueueTimePanelContainer2" unique_id=5638501]
+layout_mode = 2
+size_flags_vertical = 19
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer2/MarginContainer/VBoxContainer/QueueTimePanelContainer2/MarginContainer" unique_id=748761363]
+layout_mode = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer2/MarginContainer/VBoxContainer/QueueTimePanelContainer2/MarginContainer/HBoxContainer" unique_id=1668192541]
+layout_mode = 2
+theme = ExtResource("3_4edgx")
+theme_override_font_sizes/font_size = 40
+text = "Queue Time:    "
+horizontal_alignment = 1
+
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer2/MarginContainer/VBoxContainer/QueueTimePanelContainer2/MarginContainer/HBoxContainer" unique_id=768775392]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_3wy1v")
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer2/MarginContainer/VBoxContainer/QueueTimePanelContainer2/MarginContainer/HBoxContainer/PanelContainer" unique_id=1052952364]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="CurrentQueueTimeLabel" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer2/MarginContainer/VBoxContainer/QueueTimePanelContainer2/MarginContainer/HBoxContainer/PanelContainer/MarginContainer" unique_id=843719492]
+layout_mode = 2
+theme_override_font_sizes/font_size = 35
+text = "85"

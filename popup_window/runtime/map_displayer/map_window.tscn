@@ -11,7 +11,6 @@
 [sub_resource type="Resource" id="Resource_vf8wm"]
 script = ExtResource("4_fv6o0")
 backup_window_scene_path = "res://popup_window/runtime/map_displayer/map_window.tscn"
-toggle = true
 is_modifier = true
 modifier_script = ExtResource("4_p4txh")
 metadata/_custom_type_script = "uid://df67yf61f3bjk"
@@ -50,6 +49,9 @@ border_properties = Dictionary[StringName, Variant]({
 &"window_icon": ExtResource("6_755vl"),
 &"window_name": "Park Map"
 })
+global_dragging = true
+window_icon = ExtResource("6_755vl")
+window_name = " - Park Map"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1767954796]
 anchors_preset = 15

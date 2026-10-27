@@ -58,6 +58,8 @@ func _enter_tree() -> void:
 		_setup_intial_values()
 		setup_done = true
 	
+	borderless = false
+	borderless = true
 	_setup_custom_border()
 
 
@@ -159,7 +161,7 @@ func add_modifier(modifier: PopupWindowModifier, toggle: bool = false) -> void:
 	
 	custom_border.modifier_close_button.show()
 	
-	var modifier_parent: Node = modifier_parent_node if modifier_parent_node else self
+	var modifier_parent: Node = modifier_parent_node as Node if modifier_parent_node else self
 	
 	modifier.window = self
 	

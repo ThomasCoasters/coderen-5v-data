@@ -25,7 +25,8 @@ func _draw_attraction_markers(tile_settings: ParkMapDisplayer.TileSettings) -> v
 			attraction.longitude,
 			attraction.latitude,
 			tile_settings,
-			window.park_map_displayer.padded_pixels_northwest
+			window.park_map_displayer.padded_pixels_northwest,
+			window.park_map_displayer.current_image_scale
 		)
 		
 		var attraction_marker: Button = ATTRACTION_MARKER.instantiate()
