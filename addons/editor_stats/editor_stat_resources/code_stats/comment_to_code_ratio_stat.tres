@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="CommentToCodeRatioStat" format=3 uid="uid://dnethjwrc5g1u"]
+
+[ext_resource type="Script" uid="uid://dt5mvhbg2vles" path="res://addons/editor_stats/editor_stat_scripts/code_stats/comment_to_code_ratio_stat.gd" id="1_5653h"]
+
+[resource]
+script = ExtResource("1_5653h")
+stat_name = "comment to code ratio:"
+stat_type = 1
+metadata/_custom_type_script = "uid://dt5mvhbg2vles"

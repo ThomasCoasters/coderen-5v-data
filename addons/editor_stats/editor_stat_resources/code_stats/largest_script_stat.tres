@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="LargestScriptStat" format=3 uid="uid://drvtk8i2ek1f6"]
+
+[ext_resource type="Script" uid="uid://c25or72lt1b16" path="res://addons/editor_stats/editor_stat_scripts/code_stats/largest_script_stat.gd" id="1_34xkq"]
+
+[resource]
+script = ExtResource("1_34xkq")
+stat_name = "largest script:"
+stat_type = 1
+metadata/_custom_type_script = "uid://c25or72lt1b16"

@@ -1,0 +1,127 @@
+[gd_scene format=3 uid="uid://t8260cy2xvyw"]
+
+[ext_resource type="Texture2D" uid="uid://cyggl6sx2s1d5" path="res://icon.svg" id="1_q4yke"]
+[ext_resource type="Script" uid="uid://j5mrgepnp8a5" path="res://popup_window/popup_window_border/custom_window_border.gd" id="1_vi8s1"]
+[ext_resource type="Texture2D" uid="uid://dj3rg66s01cqt" path="res://popup_window/popup_window_border/visuals/closing/close_disabled.png" id="3_eappy"]
+[ext_resource type="Texture2D" uid="uid://bxk1ykft3050w" path="res://popup_window/popup_window_border/visuals/closing/close_idle.png" id="3_hnxiv"]
+[ext_resource type="Texture2D" uid="uid://bpdqejmrmega1" path="res://popup_window/popup_window_border/visuals/modifier_closing/modifier_close_idle.png" id="3_m01og"]
+[ext_resource type="Texture2D" uid="uid://co1o0ojpn0qkf" path="res://popup_window/popup_window_border/visuals/closing/close_pressed.png" id="4_vyy8y"]
+[ext_resource type="Texture2D" uid="uid://bwcuuaf61qn4o" path="res://popup_window/popup_window_border/visuals/modifier_closing/modifier_close_pressed.png" id="4_wgwdy"]
+[ext_resource type="Texture2D" uid="uid://drl63ox38uoxs" path="res://popup_window/popup_window_border/visuals/closing/close_hover.png" id="5_1qfej"]
+[ext_resource type="Texture2D" uid="uid://byaiilhifdxne" path="res://popup_window/popup_window_border/visuals/modifier_closing/modifier_close_hover.png" id="5_r3lwr"]
+[ext_resource type="Texture2D" uid="uid://dv8w34sxn4dwl" path="res://popup_window/popup_window_border/visuals/modifier_closing/modifier_close_disabled.png" id="6_4142l"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_eae6q"]
+bg_color = Color(0.11858138, 0.11858138, 0.11858138, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_eappy"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_p4txh"]
+texture = ExtResource("3_m01og")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_3wy1v"]
+texture = ExtResource("4_wgwdy")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_kfbq2"]
+texture = ExtResource("5_r3lwr")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_4dugh"]
+texture = ExtResource("6_4142l")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_vi8s1"]
+texture = ExtResource("3_hnxiv")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dy3bb"]
+texture = ExtResource("4_vyy8y")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hnxiv"]
+texture = ExtResource("5_1qfej")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_7ltkw"]
+texture = ExtResource("3_eappy")
+
+[node name="CustomWindowBorder" type="PanelContainer" unique_id=972422543]
+custom_minimum_size = Vector2(0, 23)
+custom_maximum_size = Vector2(-1, 23)
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 7.0
+grow_horizontal = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+focus_behavior_recursive = 1
+theme_override_styles/panel = SubResource("StyleBoxFlat_eae6q")
+script = ExtResource("1_vi8s1")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=601621403]
+layout_mode = 2
+alignment = 1
+
+[node name="WindowDetailsHBoxContainer" type="HBoxContainer" parent="HBoxContainer" unique_id=689215645]
+layout_mode = 2
+
+[node name="WindowTexture" type="TextureRect" parent="HBoxContainer/WindowDetailsHBoxContainer" unique_id=299954066]
+unique_name_in_owner = true
+layout_mode = 2
+texture = ExtResource("1_q4yke")
+expand_mode = 2
+stretch_mode = 4
+
+[node name="Control" type="Control" parent="HBoxContainer/WindowDetailsHBoxContainer" unique_id=749021964]
+layout_mode = 2
+
+[node name="WindowName" type="Label" parent="HBoxContainer/WindowDetailsHBoxContainer/Control" unique_id=2067726941]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -14.5
+offset_right = 118.0
+offset_bottom = 14.5
+grow_vertical = 2
+offset_transform_scale = Vector2(1.5, 1.5)
+theme_override_font_sizes/font_size = 20
+text = "PLACEHOLDER"
+
+[node name="DragDetectionButton" type="Button" parent="HBoxContainer" unique_id=1877932306]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_default_cursor_shape = 6
+theme_override_styles/normal = SubResource("StyleBoxEmpty_eappy")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxEmpty_eappy")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_eappy")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxEmpty_eappy")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_eappy")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxEmpty_eappy")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_eappy")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxEmpty_eappy")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_eappy")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxEmpty_eappy")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_eappy")
+
+[node name="interactionIcons" type="HBoxContainer" parent="HBoxContainer" unique_id=739593455]
+layout_mode = 2
+
+[node name="ModifierCloseButton" type="Button" parent="HBoxContainer/interactionIcons" unique_id=1284021922]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(23, 23)
+layout_mode = 2
+tooltip_text = "Close Last Modifier"
+theme_override_styles/normal = SubResource("StyleBoxTexture_p4txh")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_3wy1v")
+theme_override_styles/hover = SubResource("StyleBoxTexture_kfbq2")
+theme_override_styles/disabled = SubResource("StyleBoxTexture_4dugh")
+theme_override_styles/focus = SubResource("StyleBoxTexture_kfbq2")
+
+[node name="CloseButton" type="Button" parent="HBoxContainer/interactionIcons" unique_id=445671540]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(23, 23)
+layout_mode = 2
+tooltip_text = "Close Window"
+theme_override_styles/normal = SubResource("StyleBoxTexture_vi8s1")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_dy3bb")
+theme_override_styles/hover = SubResource("StyleBoxTexture_hnxiv")
+theme_override_styles/disabled = SubResource("StyleBoxTexture_7ltkw")
+theme_override_styles/focus = SubResource("StyleBoxTexture_hnxiv")

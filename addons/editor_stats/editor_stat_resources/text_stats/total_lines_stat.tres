@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="TotalLinesStat" format=3 uid="uid://cpjthbsf3s4bf"]
+
+[ext_resource type="Script" uid="uid://lqtyn0eql015" path="res://addons/editor_stats/editor_stat_scripts/text_stats/total_lines_stat.gd" id="1_1krki"]
+
+[resource]
+script = ExtResource("1_1krki")
+stat_name = "Number of lines:"
+stat_type = 3
+metadata/_custom_type_script = "uid://lqtyn0eql015"

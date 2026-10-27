@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="MostUsedWordsStat" format=3 uid="uid://b2kpoo7vasrug"]
+
+[ext_resource type="Script" uid="uid://tuqpgkdvr8r4" path="res://addons/editor_stats/editor_stat_scripts/text_stats/most_used_words_stat.gd" id="1_dn1u1"]
+
+[resource]
+script = ExtResource("1_dn1u1")
+slice_count = 20
+stat_name = "Most used words:"
+stat_type = 3
+metadata/_custom_type_script = "uid://tuqpgkdvr8r4"

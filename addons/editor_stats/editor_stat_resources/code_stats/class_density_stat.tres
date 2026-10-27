@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="ClassDensityStat" format=3 uid="uid://dplyv3ag6bydt"]
+
+[ext_resource type="Script" uid="uid://dr7src8vob0ho" path="res://addons/editor_stats/editor_stat_scripts/code_stats/class_density_stat.gd" id="1_orlvy"]
+
+[resource]
+script = ExtResource("1_orlvy")
+stat_name = "class density: "
+stat_type = 1
+metadata/_custom_type_script = "uid://dr7src8vob0ho"

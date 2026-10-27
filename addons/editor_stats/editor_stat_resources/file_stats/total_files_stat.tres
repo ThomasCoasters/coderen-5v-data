@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="TotalFilesStat" format=3 uid="uid://cquf5w248ubt3"]
+
+[ext_resource type="Script" uid="uid://b424615khd73k" path="res://addons/editor_stats/editor_stat_scripts/file_stats/total_files_stat.gd" id="1_roord"]
+
+[resource]
+script = ExtResource("1_roord")
+stat_name = "Amount of files:"
+stat_type = 2
+metadata/_custom_type_script = "uid://b7cugv7ted5j3"

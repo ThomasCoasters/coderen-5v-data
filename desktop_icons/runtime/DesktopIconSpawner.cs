@@ -1,0 +1,112 @@
+using Godot;
+using System;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+
+
+[GlobalClass]
+public partial class DesktopIconSpawner : RefCounted
+{
+    [Signal]
+    public delegate void MultipleIconsProgressChangedEventHandler(float newPercentage);
+
+    /// <summary>
+    /// Creates a new icon on the desktop of the player.
+    /// </summary>
+    /// <param name="iconName">The name of the generated icon.</param>
+    /// <param name="bonusScriptArguments">Arguments added the desktop icon.</param>
+    public static void CreateDesktopIcon(string iconName, string bonusScriptArguments = "", string visualIconPath = "")
+    {
+        // only do this if this is running on windows
+        if (!OperatingSystem.IsWindows())
+        {
+            GD.PrintErr("Desktop icons creation is only supported on windows.");
+            return;
+        }
+
+
+        // get the path to this user's desktop folder
+        string desktopPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop);
+        // get the path the generated desktop icon will be placed
+        string iconPath = Path.Combine(desktopPath, iconName + ".lnk");
+        // get the path to the godot game executable
+        string gameExePath = OS.GetExecutablePath();
+        // get the path to the "res://" folder
+        string resFolderPath = ProjectSettings.GlobalizePath("res://");
+        // get the arguments added to the running of the desktop icon
+        string scriptArguments = $"--path \"{resFolderPath}\"{bonusScriptArguments}";
+        
+
+        // get the type of the powershell program
+        Type shellType = Type.GetTypeFromProgID("WScript.Shell");
+        // create a new powershell program
+        dynamic shell = Activator.CreateInstance(shellType);
+        // create a desktop shortcut
+        dynamic shortcut = shell.CreateShortcut(iconPath);
+
+        // set the path of the desktop shortcut
+        shortcut.TargetPath = gameExePath;
+        // add the arguments of the shortcut
+        shortcut.Arguments = scriptArguments;
+        // add the icon to the desktop shortcut
+        if (visualIconPath == ""){shortcut.IconLocation = gameExePath;} else {shortcut.IconLocation = visualIconPath;}
+        // save the desktop icon
+        shortcut.Save();
+    }
+
+    /// <summary>
+    /// Deletes a desktop icon with the same name as <c>iconName</c>.
+    /// </summary>
+    /// <param name="iconName">The name the, to be deleted, desktop icon has.</param>
+    public static void DeleteDesktopIcon(string iconName)
+    {
+        // get the path to this user's desktop folder
+        string desktopPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop);
+        // get the path the generated desktop icon was placed
+        string iconPath = Path.Combine(desktopPath, iconName + ".lnk");
+
+        // if the file actually exists, delete it
+        if (File.Exists(iconPath))
+        {
+            File.Delete(iconPath);
+        }
+    }
+
+    /// <summary>
+    /// Creates multiple icons given by <c>iconArguments</c> in parallel using multithreading in a quick enviorenment (C# instead of GDScript).
+    /// </summary>
+    /// <param name="iconArguments">The arguments the generated shortcut should have with the name first and then the argument that fits that name.</param>
+    public void CreateMultipleIconsParallel(Godot.Collections.Dictionary<Resource, String> iconArguments)
+    {
+        // get refrences to the total icons there are to be made and how many are already made
+        int total_icons = iconArguments.Count;
+        int completed_icons = 0;
+
+        // create the given icons in another thread, so the main game can keep running through icon creation
+        Task.Run(() =>
+        {
+            // also run the creation in parallel to eachother, so that it is completed faster
+            Parallel.ForEach(iconArguments, iconArgument =>
+            {
+                // check if the key is a valid key, and thus is allowed to be created
+                if (iconArgument.Key.Get("name").AsString() == string.Empty)
+                {
+                    GD.PrintErr("Generating desktop icons requires a Resource with a 'name' parameter that can convert to a string.");
+                    return;
+                }
+
+                // get the name of this desktop icon
+                string iconName = iconArgument.Key.Get("name").AsString();
+
+                // create the desktop icon
+                CreateDesktopIcon(iconName, iconArgument.Value, iconArgument.Key.Get("visual_icon_path").AsString());
+
+                // get the current percentage how many files are done
+                int done = System.Threading.Interlocked.Increment(ref completed_icons);
+                float progress = (float)done / total_icons * 100.0f;
+                EmitSignal(SignalName.MultipleIconsProgressChanged, progress);
+            });
+        });
+    }
+}

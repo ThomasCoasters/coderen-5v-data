@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="TotalWordsStat" format=3 uid="uid://nd3athjdpvw2"]
+
+[ext_resource type="Script" uid="uid://dlk5b4xb77m8f" path="res://addons/editor_stats/editor_stat_scripts/text_stats/total_words_stat.gd" id="1_d21b1"]
+
+[resource]
+script = ExtResource("1_d21b1")
+stat_name = "Number of words:"
+stat_type = 3
+metadata/_custom_type_script = "uid://dlk5b4xb77m8f"

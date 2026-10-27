@@ -1,0 +1,39 @@
+[gd_scene format=3 uid="uid://bc6thjo6mlr8i"]
+
+[ext_resource type="Script" uid="uid://bnxoqngm5apne" path="res://addons/editor_stats/stats_UI/editor_stats_ui.gd" id="1_e3q78"]
+
+[node name="EditorStatsUi" type="Control" unique_id=1253575784]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_e3q78")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=696017596]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="RefreshEditorStatButton" type="Button" parent="VBoxContainer" unique_id=1187092661]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Refresh (Last updated: Never)"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer" unique_id=1322813871]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="EditorStatContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer" unique_id=1027357906]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[connection signal="pressed" from="VBoxContainer/RefreshEditorStatButton" to="." method="_on_refresh_editor_stat_button_pressed"]

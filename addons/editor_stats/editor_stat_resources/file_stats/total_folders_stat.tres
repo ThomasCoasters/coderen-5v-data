@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="TotalFoldersStat" format=3 uid="uid://cexfsqdxajdcr"]
+
+[ext_resource type="Script" uid="uid://b7cugv7ted5j3" path="res://addons/editor_stats/editor_stat_scripts/file_stats/total_folders_stat.gd" id="1_4jypv"]
+
+[resource]
+script = ExtResource("1_4jypv")
+stat_name = "Amount of folders:"
+stat_type = 2
+metadata/_custom_type_script = "uid://b7cugv7ted5j3"

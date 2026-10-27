@@ -1,0 +1,97 @@
+[gd_scene format=3 uid="uid://ctepg2rx4pfat"]
+
+[ext_resource type="Script" uid="uid://bwhcu1xw36hy" path="res://popup_window/runtime/attraction_info_displayer/attraction_info_window.gd" id="1_o31ah"]
+[ext_resource type="Texture2D" uid="uid://dkoyoabr5b3xh" path="res://popup_window/runtime/map_displayer/visuals/attraction_marker.svg" id="2_o31ah"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3wy1v"]
+bg_color = Color(0.6, 0.6, 0.6, 0.42352942)
+border_width_left = 10
+border_width_top = 10
+border_width_right = 10
+border_width_bottom = 10
+border_color = Color(0.54497427, 0.5449743, 0.5449741, 1)
+border_blend = true
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[node name="AttractionInfoWindow" type="Window" unique_id=699555340 node_paths=PackedStringArray("modifier_parent_node", "border_parent_override")]
+transparent_bg = true
+oversampling_override = 1.0
+title = " - Info"
+initial_position = 1
+size = Vector2i(500, 791)
+unresizable = true
+borderless = true
+transparent = true
+minimize_disabled = true
+maximize_disabled = true
+content_scale_size = Vector2i(1920, 1111)
+script = ExtResource("1_o31ah")
+setup_done = true
+window_name = " - Info"
+modifier_parent_node = NodePath("VBoxContainer/Control/Modifiers")
+border_parent_override = NodePath("VBoxContainer")
+border_index_override = 0
+border_properties = Dictionary[StringName, Variant]({
+&"global_dragging": false,
+&"window_icon": ExtResource("2_o31ah"),
+&"window_name": "App Window"
+})
+metadata/_custom_type_script = "uid://wyrg2bi6c1nu"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1255319670]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 0
+
+[node name="Control" type="Control" parent="VBoxContainer" unique_id=1135621305]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+mouse_behavior_recursive = 1
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/Control" unique_id=498789059]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.11764706, 0.11764706, 0.11764706, 1)
+
+[node name="Modifiers" type="Control" parent="VBoxContainer/Control" unique_id=766602167]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+mouse_filter = 2
+mouse_behavior_recursive = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Control" unique_id=601930718]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/Control/VBoxContainer" unique_id=551857501]
+layout_mode = 2
+size_flags_vertical = 19
+theme_override_styles/panel = SubResource("StyleBoxFlat_3wy1v")
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Control/VBoxContainer/PanelContainer" unique_id=2082281992]
+layout_mode = 2
+size_flags_vertical = 19
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5

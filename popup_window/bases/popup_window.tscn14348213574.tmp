@@ -1,0 +1,72 @@
+[gd_scene format=3 uid="uid://5eu55bhv4a8w"]
+
+[ext_resource type="Texture2D" uid="uid://cyggl6sx2s1d5" path="res://icon.svg" id="1_oa252"]
+[ext_resource type="Script" uid="uid://wyrg2bi6c1nu" path="res://popup_window/base/popup_window.gd" id="1_ywf4i"]
+[ext_resource type="Script" uid="uid://7svw3f7qhhnl" path="res://texture_rect.gd" id="3_2klbd"]
+[ext_resource type="Resource" uid="uid://td8ajpteni8j" path="res://API_keys/theme_parks/resources/Efteling/efteling.res" id="4_yu8h2"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_plai3"]
+bg_color = Color(0.18359044, 0.18359047, 0.18359032, 1)
+
+[node name="Window" type="Window" unique_id=1005423658 node_paths=PackedStringArray("border_parent_override")]
+transparent_bg = true
+oversampling_override = 1.0
+initial_position = 1
+size = Vector2i(1920, 1080)
+unresizable = true
+borderless = true
+transparent = true
+minimize_disabled = true
+maximize_disabled = true
+content_scale_size = Vector2i(1920, 1080)
+content_scale_mode = 1
+content_scale_aspect = 1
+script = ExtResource("1_ywf4i")
+setup_done = true
+border_parent_override = NodePath(".")
+border_properties = Dictionary[StringName, Variant]({
+&"window_icon": ExtResource("1_oa252"),
+&"window_name": "App Window"
+})
+window_icon = ExtResource("1_oa252")
+window_name = "App Window"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1767954796]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 0
+
+[node name="PanelContainer2" type="PanelContainer" parent="VBoxContainer" unique_id=228573242]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_plai3")
+
+[node name="Control" type="Control" parent="VBoxContainer/PanelContainer2" unique_id=1997330243]
+layout_mode = 2
+
+[node name="Icon" type="Sprite2D" parent="VBoxContainer/PanelContainer2/Control" unique_id=755057586]
+position = Vector2(925, 898)
+texture = ExtResource("1_oa252")
+
+[node name="WindowButton" type="Button" parent="VBoxContainer/PanelContainer2/Control" unique_id=1677637310]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -213.0
+offset_right = 510.0
+grow_vertical = 0
+theme_override_font_sizes/font_size = 62
+text = "Add Window"
+
+[node name="ParkMapDisplayer" type="TextureRect" parent="VBoxContainer/PanelContainer2" unique_id=1102612136]
+layout_mode = 2
+script = ExtResource("3_2klbd")
+park = ExtResource("4_yu8h2")
+metadata/_custom_type_script = "uid://7svw3f7qhhnl"
+
+[connection signal="close_requested" from="." to="." method="_on_close_requested"]
+[connection signal="pressed" from="VBoxContainer/PanelContainer2/Control/WindowButton" to="." method="_on_window_button_pressed"]
