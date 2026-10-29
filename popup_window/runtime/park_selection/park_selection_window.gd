@@ -8,10 +8,17 @@ const PARK_DB = preload("uid://4mhtg5um74xo")
 
 
 @onready var grid_container: GridContainer = %GridContainer
+@onready var search_line_edit: LineEdit = %SearchLineEdit
 
+
+var parks_by_continent: Dictionary[String, PackedStringArray]
+var continent_panel_by_name: Dictionary[String, PanelContainer]
+var park_button_by_name: Dictionary[String, Button]
 
 func _ready() -> void:
 	if Engine.is_editor_hint(): return
+	search_line_edit.text_changed.connect(_search)
+	
 	_setup_park_selection_ui()
 
 
@@ -39,6 +46,11 @@ func _setup_park_selection_ui() -> void:
 		continent_label.text = continent
 		continent_container.add_child(continent_label)
 		
+		
+		continent_panel_by_name[continent] = continent_panel
+		parks_by_continent[continent] = PackedStringArray()
+		
+		
 		for zone: String in PARK_DB.parks_by_location[continent]:
 			for park_name: String in PARK_DB.parks_by_location[continent][zone]:
 				var park: ParkID = PARK_DB.parks_by_location[continent][zone][park_name]
@@ -61,5 +73,43 @@ func _setup_park_selection_ui() -> void:
 				)
 				
 				continent_container.add_child(park_button)
+				
+				parks_by_continent[continent].append(park_name)
+				park_button_by_name[park_name] = park_button
+
+
+
+func _search(search_text: String) -> void:
+	if search_text.is_empty():
+		for park_button: Button in park_button_by_name.values():
+			park_button.show()
+		for continent_panel: PanelContainer in continent_panel_by_name.values():
+			continent_panel.show()
+		return
 	
-	print("done")
+	for park_button: Button in park_button_by_name.values():
+		park_button.hide()
+	for continent_panel: PanelContainer in continent_panel_by_name.values():
+		continent_panel.show()
+	
+	var fuzzy_search: FuzzySearch = FuzzySearch.new()
+	fuzzy_search.use_exact_tokens = true
+	
+	for continent: String in parks_by_continent:
+		if fuzzy_search.search(search_text, continent):
+			for park_button: Button in park_button_by_name.values():
+				park_button.show()
+			continue
+		
+		
+		var matched: bool = false
+		
+		for fuzzy_match: FuzzySearchMatch in\
+		fuzzy_search.search_all(search_text, parks_by_continent[continent]):
+			matched = true
+			
+			var park_name: String = parks_by_continent[continent][fuzzy_match.original_index]
+			park_button_by_name[park_name].show()
+		
+		if not matched:
+			continent_panel_by_name[continent].hide()
