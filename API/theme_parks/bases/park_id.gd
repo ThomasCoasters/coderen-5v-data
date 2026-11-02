@@ -13,3 +13,5 @@ extends Resource
 @export var zone: String
 
 @export var attractions: Array[AttractionID]
+
+@export var path_data: Array[Array]
