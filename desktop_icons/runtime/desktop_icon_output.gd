@@ -42,7 +42,7 @@ static func output_by_window_settings(window_settings: GeneratedWindowSettings) 
 	var output_dir: String = DesktopIconConfig.get_global_output_dir()
 	
 	# get a unique name for the outputted file by using time based numbers
-	output_dir += str(Time.get_unix_time_from_system() + Time.get_ticks_usec()) + ".tres"
+	output_dir += str(Time.get_unix_time_from_system() + Time.get_ticks_usec()).replace(".", "") + ".tres"
 	
 	# save the window_settings resource at the output location
 	ResourceSaver.save(window_settings, output_dir)

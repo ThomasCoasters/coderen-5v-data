@@ -32,6 +32,7 @@ func _draw_attraction_markers(tile_settings: ParkMapDisplayer.TileSettings) -> v
 		var attraction_marker: Button = ATTRACTION_MARKER.instantiate()
 		attraction_marker.position = pos + attraction_marker.position
 		attraction_marker.tooltip_text = attraction.name
+		attraction_marker.z_index += 1
 		
 		attraction_marker.pressed.connect(DesktopIconOutput.output_by_window_settings.bind(get_generated_window_settings(attraction)))
 		add_child(attraction_marker)

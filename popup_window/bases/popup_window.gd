@@ -142,7 +142,8 @@ func _input(event: InputEvent) -> void:
 func add_modifier(modifier: PopupWindowModifier, toggle: bool = false) -> void:
 	var existing_modifier: PopupWindowModifier = null
 	for mod in modifiers.keys():
-		if modifiers[mod] == modifier.scene_file_path:
+		var modifier_script: Script = modifier.get_script()
+		if modifiers[mod] == modifier_script.resource_path:
 			existing_modifier = mod
 			break
 	
@@ -227,7 +228,7 @@ func _handle_window_dragging(event: InputEvent) -> void:
 
 
 func _modifier_close_requested() -> void:
-	var last_modifier: PopupWindowModifier = modifiers.keys().pop_front()
+	var last_modifier: PopupWindowModifier = modifiers.keys().pop_back()
 	last_modifier.queue_free()
 	modifiers.erase(last_modifier)
 	
