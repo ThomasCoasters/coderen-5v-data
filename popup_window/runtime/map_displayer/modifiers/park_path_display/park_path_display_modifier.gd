@@ -22,7 +22,8 @@ func _draw_park_paths(tile_settings: ParkMapDisplayer.TileSettings) -> void:
 	if paths_data.is_empty():
 		emit_error("Could not find path data for the current park, some parks have this issue. If this issue persists through every park, try resetting the program.")
 		return
-
+	
+	
 	for way in paths_data:
 		var line_2d = Line2D.new()
 		line_2d.width = 3.0
