@@ -11,8 +11,16 @@
 [ext_resource type="Texture2D" uid="uid://byaiilhifdxne" path="res://popup_window/popup_window_border/visuals/modifier_closing/modifier_close_hover.png" id="5_r3lwr"]
 [ext_resource type="Texture2D" uid="uid://dv8w34sxn4dwl" path="res://popup_window/popup_window_border/visuals/modifier_closing/modifier_close_disabled.png" id="6_4142l"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_eae6q"]
-bg_color = Color(0.11858138, 0.11858138, 0.11858138, 1)
+[sub_resource type="Gradient" id="Gradient_m01og"]
+colors = PackedColorArray(0.13301438, 0.19382814, 0.6197453, 1, 0.25897467, 0.36612445, 0.8989567, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_0i4oc"]
+gradient = SubResource("Gradient_m01og")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_67ri8"]
+texture = SubResource("GradientTexture1D_0i4oc")
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_mwxbm"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_p4txh"]
 texture = ExtResource("3_m01og")
@@ -49,28 +57,37 @@ grow_horizontal = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 focus_behavior_recursive = 1
-theme_override_styles/panel = SubResource("StyleBoxFlat_eae6q")
+theme_override_styles/panel = SubResource("StyleBoxTexture_67ri8")
 script = ExtResource("1_vi8s1")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=601621403]
 layout_mode = 2
 alignment = 1
 
-[node name="WindowDetailsHBoxContainer" type="HBoxContainer" parent="HBoxContainer" unique_id=689215645]
+[node name="Container" type="Control" parent="HBoxContainer" unique_id=1996923326]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="WindowTexture" type="TextureRect" parent="HBoxContainer/WindowDetailsHBoxContainer" unique_id=299954066]
+[node name="WindowDetailsHBoxContainer" type="HBoxContainer" parent="HBoxContainer/Container" unique_id=689215645]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+
+[node name="WindowTexture" type="TextureRect" parent="HBoxContainer/Container/WindowDetailsHBoxContainer" unique_id=299954066]
 unique_name_in_owner = true
 layout_mode = 2
 texture = ExtResource("1_q4yke")
 expand_mode = 2
 stretch_mode = 4
 
-[node name="Control" type="Control" parent="HBoxContainer/WindowDetailsHBoxContainer" unique_id=749021964]
+[node name="Control" type="Control" parent="HBoxContainer/Container/WindowDetailsHBoxContainer" unique_id=749021964]
 layout_mode = 2
 
-[node name="WindowName" type="Label" parent="HBoxContainer/WindowDetailsHBoxContainer" unique_id=2067726941]
+[node name="WindowName" type="Label" parent="HBoxContainer/Container/WindowDetailsHBoxContainer" unique_id=2067726941]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -81,6 +98,24 @@ text_overrun_behavior = 6
 resize_font_to_fit = true
 minimum_font_size = 16
 maximum_font_size = 16
+
+[node name="DragDetectionButton" type="Button" parent="HBoxContainer/Container" unique_id=1794694567]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+focus_mode = 0
+mouse_default_cursor_shape = 6
+theme_override_styles/normal = SubResource("StyleBoxEmpty_mwxbm")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_mwxbm")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_mwxbm")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_mwxbm")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_mwxbm")
 
 [node name="interactionIcons" type="HBoxContainer" parent="HBoxContainer" unique_id=739593455]
 layout_mode = 2

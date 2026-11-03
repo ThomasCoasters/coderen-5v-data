@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://wtmvjebpaw26" path="res://desktop_icons/visuals/map.svg" id="6_755vl"]
 [ext_resource type="Script" uid="uid://1mwaedyqjcb5" path="res://popup_window/runtime/map_displayer/modifiers/park_path_display/park_path_display_modifier.gd" id="6_p4txh"]
 [ext_resource type="Script" uid="uid://7svw3f7qhhnl" path="res://popup_window/runtime/map_displayer/modifiers/park_map_displayer/park_map_displayer.gd" id="7_qs7ew"]
+[ext_resource type="Texture2D" uid="uid://dm0q76ilbw04c" path="res://popup_window/popup_window_border/visuals/window_bg/window_bg.png" id="8_obsb7"]
 
 [sub_resource type="Resource" id="Resource_vf8wm"]
 script = ExtResource("4_fv6o0")
@@ -57,8 +58,8 @@ script = ExtResource("1_ejaqx")
 setup_done = true
 window_name = " - Park Map"
 initial_desktop_icons = Array[ExtResource("2_67vt5")]([SubResource("Resource_p4txh"), SubResource("Resource_1jmkj")])
-modifier_parent_node = NodePath("VBoxContainer/Control/Modifiers")
-border_parent_override = NodePath("VBoxContainer")
+modifier_parent_node = NodePath("MarginContainer/VBoxContainer/Control/Modifiers")
+border_parent_override = NodePath("MarginContainer/VBoxContainer")
 border_index_override = 0
 border_properties = Dictionary[StringName, Variant]({
 &"global_dragging": true,
@@ -69,21 +70,41 @@ global_dragging = true
 window_icon = ExtResource("6_755vl")
 window_name = " - Park Map"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1767954796]
+[node name="NinePatchRect" type="NinePatchRect" parent="." unique_id=692054194]
+texture_filter = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+texture = ExtResource("8_obsb7")
+patch_margin_left = 2
+patch_margin_top = 2
+patch_margin_right = 2
+patch_margin_bottom = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1253469668]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1767954796]
+layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="Control" type="Control" parent="VBoxContainer" unique_id=676515119]
+[node name="Control" type="Control" parent="MarginContainer/VBoxContainer" unique_id=676515119]
 layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2
 mouse_behavior_recursive = 1
 
-[node name="ParkMapDisplayer" type="TextureRect" parent="VBoxContainer/Control" unique_id=1102612136]
+[node name="ParkMapDisplayer" type="TextureRect" parent="MarginContainer/VBoxContainer/Control" unique_id=1102612136]
 unique_name_in_owner = true
 layout_mode = 0
 offset_right = 1920.0
@@ -97,7 +118,7 @@ padding_pixels = 100
 backup_zoom = 17
 metadata/_custom_type_script = "uid://7svw3f7qhhnl"
 
-[node name="Modifiers" type="Control" parent="VBoxContainer/Control" unique_id=47573917]
+[node name="Modifiers" type="Control" parent="MarginContainer/VBoxContainer/Control" unique_id=47573917]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0

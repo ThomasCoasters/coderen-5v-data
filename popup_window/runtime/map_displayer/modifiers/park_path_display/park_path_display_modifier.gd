@@ -37,7 +37,7 @@ func _draw_park_paths(tile_settings: ParkMapDisplayer.TileSettings) -> void:
 				tile_settings,
 				window.park_map_displayer.padded_pixels_northwest,
 				window.park_map_displayer.current_image_scale
-			)
+			) + global_position
 			line_2d.add_point(pos)
 			
 		add_child(line_2d)
