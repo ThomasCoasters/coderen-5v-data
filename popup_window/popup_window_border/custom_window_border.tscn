@@ -20,6 +20,8 @@ gradient = SubResource("Gradient_m01og")
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_67ri8"]
 texture = SubResource("GradientTexture1D_0i4oc")
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_3h44w"]
+
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_mwxbm"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_p4txh"]
@@ -63,6 +65,11 @@ script = ExtResource("1_vi8s1")
 [node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=601621403]
 layout_mode = 2
 alignment = 1
+
+[node name="VSeparator" type="VSeparator" parent="HBoxContainer" unique_id=1424615462]
+layout_mode = 2
+theme_override_constants/separation = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_3h44w")
 
 [node name="Container" type="Control" parent="HBoxContainer" unique_id=1996923326]
 layout_mode = 2
@@ -119,6 +126,7 @@ theme_override_styles/focus = SubResource("StyleBoxEmpty_mwxbm")
 
 [node name="interactionIcons" type="HBoxContainer" parent="HBoxContainer" unique_id=739593455]
 layout_mode = 2
+theme_override_constants/separation = 0
 
 [node name="ModifierCloseButton" type="Button" parent="HBoxContainer/interactionIcons" unique_id=1284021922]
 unique_name_in_owner = true
@@ -130,6 +138,10 @@ theme_override_styles/pressed = SubResource("StyleBoxTexture_3wy1v")
 theme_override_styles/hover = SubResource("StyleBoxTexture_kfbq2")
 theme_override_styles/disabled = SubResource("StyleBoxTexture_4dugh")
 theme_override_styles/focus = SubResource("StyleBoxTexture_kfbq2")
+
+[node name="VSeparator" type="VSeparator" parent="HBoxContainer/interactionIcons" unique_id=1018296194]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_3h44w")
 
 [node name="CloseButton" type="Button" parent="HBoxContainer/interactionIcons" unique_id=445671540]
 unique_name_in_owner = true

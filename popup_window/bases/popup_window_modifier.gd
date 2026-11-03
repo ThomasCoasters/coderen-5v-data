@@ -7,16 +7,11 @@ var global_position: Vector2 = Vector2.ZERO
 
 @abstract func refresh() -> void
 
-func _init() -> void:
+func _ready() -> void:
 	var position_parent: Node = get_parent()
-	while not position_parent is Control:
-		if not position_parent: return
+	while not position_parent is Window and position_parent:
+		var global_parent_pos: Vector2 = position_parent.get("position") as Vector2
+		if global_parent_pos:
+			global_position += global_parent_pos
 		
 		position_parent = position_parent.get_parent()
-		
-		if position_parent is Window:
-			return
-	
-	
-	if position_parent:
-		global_position = position_parent.global_position

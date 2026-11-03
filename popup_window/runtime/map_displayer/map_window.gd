@@ -5,6 +5,7 @@ extends PopupWindow
 
 ## The [ParkMapDisplayer] that displays the park map.
 @onready var park_map_displayer: ParkMapDisplayer = %ParkMapDisplayer
+@onready var content_margin_container: MarginContainer = %ContentMarginContainer
 
 func _ready() -> void:
 	# connect signals from the park map displayer
@@ -32,6 +33,10 @@ func _refresh_park_map_size() -> void:
 	# get the new size of the window, by getting the park map's size and the custom border's size
 	var new_size: Vector2i = Vector2i(park_map_displayer.size)
 	new_size.y += int(custom_border.size.y)
+	new_size += Vector2i(
+		content_margin_container.get_theme_constant("margin_left") + content_margin_container.get_theme_constant("margin_right"),
+		content_margin_container.get_theme_constant("margin_bottom") + content_margin_container.get_theme_constant("margin_top"),
+	)
 	
 	# set the size of the window and the content scale size
 	size = new_size

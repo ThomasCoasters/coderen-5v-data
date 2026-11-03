@@ -44,6 +44,9 @@ func _enter_tree():
 
 
 func _ready() -> void:
+	if not DirAccess.dir_exists_absolute(DesktopIconConfig.OUTPUT_DIRECTORY):
+		DirAccess.make_dir_absolute(DesktopIconConfig.OUTPUT_DIRECTORY)
+	
 	# if icons should be created, generate the icons
 	if not initial_desktop_icons.is_empty():
 		_create_desktop_icons(initial_desktop_icons)

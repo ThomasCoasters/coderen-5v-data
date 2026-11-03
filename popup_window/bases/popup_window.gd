@@ -143,6 +143,7 @@ func add_modifier(modifier: PopupWindowModifier, toggle: bool = false) -> void:
 	var existing_modifier: PopupWindowModifier = null
 	for mod in modifiers.keys():
 		var modifier_script: Script = modifier.get_script()
+		print(modifier_script)
 		if modifiers[mod] == modifier_script.resource_path:
 			existing_modifier = mod
 			break
@@ -166,7 +167,7 @@ func add_modifier(modifier: PopupWindowModifier, toggle: bool = false) -> void:
 	
 	modifier.window = self
 	
-	modifiers[modifier] = modifier.scene_file_path
+	modifiers[modifier] = modifier.get_script().resource_path
 	modifier_parent.add_child(modifier)
 	
 	modifier.refresh()

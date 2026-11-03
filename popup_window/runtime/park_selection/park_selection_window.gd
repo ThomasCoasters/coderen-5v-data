@@ -3,12 +3,13 @@ class_name ParkSelectionWindow
 extends PopupWindow
 
 
-const BASE_THEME = preload("uid://dd3of3q6suro4")
+const BASE_THEME = preload("uid://bndopykkard70")
 const PARK_DB = preload("uid://4mhtg5um74xo")
 
 
 @onready var grid_container: GridContainer = %GridContainer
 @onready var search_line_edit: LineEdit = %SearchLineEdit
+@onready var scroll_bar: ScrollContainer = %ScrollBar
 
 
 var parks_by_continent: Dictionary[String, PackedStringArray]
@@ -20,6 +21,8 @@ func _ready() -> void:
 	search_line_edit.text_changed.connect(_search)
 	
 	_setup_park_selection_ui()
+	
+	scroll_bar.get_v_scroll_bar().mouse_default_cursor_shape = Control.CURSOR_VSIZE
 
 
 func _setup_park_selection_ui() -> void:
@@ -39,6 +42,9 @@ func _setup_park_selection_ui() -> void:
 		var continent_container: VBoxContainer = VBoxContainer.new()
 		continent_container.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		continent_margin.add_child(continent_container)
+		var spacer: Control = continent_container.add_spacer(true)
+		spacer.custom_maximum_size.y = 5
+		spacer.custom_minimum_size.y = 5
 		
 		var continent_label: Label = Label.new()
 		continent_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER

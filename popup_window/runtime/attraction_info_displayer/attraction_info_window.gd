@@ -16,7 +16,7 @@ const DAILY_DATA_URL_SUFFIX: String = "/history/daily"
 @onready var current_window_status_label: Label = %CurrentWindowStatusLabel
 @onready var current_window_status_timer: Timer = %CurrentWindowStatusTimer
 
-@onready var live_data_panel_container: PanelContainer = %LiveDataPanelContainer
+@onready var live_data_container: VBoxContainer = %LiveDataContainer
 
 @onready var live_data_update_time_label: Label = %LiveDataUpdateTimeLabel
 
@@ -25,7 +25,7 @@ const DAILY_DATA_URL_SUFFIX: String = "/history/daily"
 @onready var queue_time_panel_container: PanelContainer = %QueueTimePanelContainer
 @onready var current_queue_time_label: Label = %CurrentQueueTimeLabel
 
-@onready var daily_data_panel_container: PanelContainer = %DailyDataPanelContainer
+@onready var daily_data_container: VBoxContainer = %DailyDataContainer
 
 @onready var operating_minutes_time_label: Label = %OperatingMinutesTimeLabel
 @onready var closed_minutes_time_label: Label = %ClosedMinutesTimeLabel
@@ -93,7 +93,7 @@ func _live_data_received(
 	data_loaded = true
 	live_data_refresh_timer.start()
 	
-	live_data_panel_container.show()
+	live_data_container.show()
 	
 	
 	
@@ -141,7 +141,7 @@ func _daily_data_received(
 	
 	data_loaded = true
 	
-	daily_data_panel_container.show()
+	daily_data_container.show()
 	
 	
 	var current_data: Dictionary = response.days[0]

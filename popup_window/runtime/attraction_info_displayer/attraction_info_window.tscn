@@ -2,20 +2,19 @@
 
 [ext_resource type="Script" uid="uid://bwhcu1xw36hy" path="res://popup_window/runtime/attraction_info_displayer/attraction_info_window.gd" id="1_o31ah"]
 [ext_resource type="Texture2D" uid="uid://dkoyoabr5b3xh" path="res://popup_window/runtime/map_displayer/visuals/attraction_marker.svg" id="2_o31ah"]
-[ext_resource type="Theme" uid="uid://dd3of3q6suro4" path="res://main/base_theme.tres" id="3_4edgx"]
+[ext_resource type="Texture2D" uid="uid://dm0q76ilbw04c" path="res://popup_window/popup_window_border/visuals/window_bg/window_bg.png" id="3_v4l3o"]
+[ext_resource type="Theme" uid="uid://bndopykkard70" path="res://main/win_98/windows_98.tres" id="4_yfr0m"]
+[ext_resource type="Texture2D" uid="uid://drcajuwn51ys5" path="res://popup_window/popup_window_border/visuals/containers/outline_container_filled.png" id="5_0iboi"]
+[ext_resource type="StyleBox" uid="uid://cetak7f238vsu" path="res://main/win_98/raised_container_texture.tres" id="5_o0xlo"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3wy1v"]
-bg_color = Color(0.6, 0.6, 0.6, 0.42352942)
-border_width_left = 10
-border_width_top = 10
-border_width_right = 10
-border_width_bottom = 10
-border_color = Color(0.54497427, 0.5449743, 0.5449741, 1)
-border_blend = true
-corner_radius_top_left = 20
-corner_radius_top_right = 20
-corner_radius_bottom_right = 20
-corner_radius_bottom_left = 20
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_thdsw"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_3odmw"]
+texture = ExtResource("5_0iboi")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
 
 [node name="AttractionInfoWindow" type="Window" unique_id=699555340 node_paths=PackedStringArray("modifier_parent_node", "border_parent_override")]
 transparent_bg = true
@@ -32,8 +31,8 @@ content_scale_size = Vector2i(1920, 1111)
 script = ExtResource("1_o31ah")
 setup_done = true
 window_name = " - Info"
-modifier_parent_node = NodePath("VBoxContainer/Control/Modifiers")
-border_parent_override = NodePath("VBoxContainer")
+modifier_parent_node = NodePath("ContentMarginContainer/VBoxContainer/Control/Modifiers")
+border_parent_override = NodePath("ContentMarginContainer/VBoxContainer")
 border_index_override = 0
 border_properties = Dictionary[StringName, Variant]({
 &"global_dragging": false,
@@ -56,28 +55,39 @@ unique_name_in_owner = true
 [node name="DailyHTTPRequest" type="HTTPRequest" parent="." unique_id=1030117784]
 unique_name_in_owner = true
 
-[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1255319670]
+[node name="Background" type="NinePatchRect" parent="." unique_id=611470967]
+texture_filter = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+texture = ExtResource("3_v4l3o")
+patch_margin_left = 6
+patch_margin_top = 6
+patch_margin_right = 6
+patch_margin_bottom = 6
+
+[node name="ContentMarginContainer" type="MarginContainer" parent="." unique_id=1884089605]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 6
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ContentMarginContainer" unique_id=1255319670]
+layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="Control" type="Control" parent="VBoxContainer" unique_id=1135621305]
+[node name="Control" type="Control" parent="ContentMarginContainer/VBoxContainer" unique_id=1135621305]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="ColorRect" type="ColorRect" parent="VBoxContainer/Control" unique_id=498789059]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.11764706, 0.11764706, 0.11764706, 1)
-
-[node name="Modifiers" type="Control" parent="VBoxContainer/Control" unique_id=766602167]
+[node name="Modifiers" type="Control" parent="ContentMarginContainer/VBoxContainer/Control" unique_id=766602167]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -88,22 +98,33 @@ size_flags_vertical = 3
 mouse_filter = 2
 mouse_behavior_recursive = 1
 
-[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/Control" unique_id=1069599647]
+[node name="ScrollContainer" type="ScrollContainer" parent="ContentMarginContainer/VBoxContainer/Control" unique_id=1069599647]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+focus_behavior_recursive = 1
+theme = ExtResource("4_yfr0m")
+scroll_vertical_custom_step = 50.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Control/ScrollContainer" unique_id=601930718]
+[node name="VBoxContainer" type="VBoxContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer" unique_id=601930718]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+theme = ExtResource("4_yfr0m")
 
-[node name="CurrentWindowStatusLabel" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer" unique_id=1405726725]
-unique_name_in_owner = true
+[node name="HSeparator" type="HSeparator" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer" unique_id=2135666979]
 layout_mode = 2
+theme_override_constants/separation = 16
+theme_override_styles/separator = SubResource("StyleBoxEmpty_thdsw")
+
+[node name="CurrentWindowStatusLabel" type="Label" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer" unique_id=1405726725]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme = ExtResource("4_yfr0m")
 theme_override_font_sizes/font_size = 45
 text = "Loading Please Wait..."
 horizontal_alignment = 1
@@ -112,396 +133,569 @@ visible_characters = 0
 visible_characters_behavior = 1
 visible_ratio = 0.0
 
-[node name="CurrentWindowStatusTimer" type="Timer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/CurrentWindowStatusLabel" unique_id=2012358994]
+[node name="CurrentWindowStatusTimer" type="Timer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/CurrentWindowStatusLabel" unique_id=2012358994]
 unique_name_in_owner = true
 wait_time = 0.05
 one_shot = true
 autostart = true
 
-[node name="LiveDataPanelContainer" type="PanelContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer" unique_id=552625751]
+[node name="LiveDataContainer" type="VBoxContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer" unique_id=2119263651]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_3wy1v")
 
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer" unique_id=603224533]
+[node name="PanelContainer" type="PanelContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataContainer" unique_id=326262931]
+texture_filter = 1
+layout_mode = 2
+theme = ExtResource("4_yfr0m")
+theme_override_styles/panel = ExtResource("5_o0xlo")
+
+[node name="MarginContainer" type="MarginContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataContainer/PanelContainer" unique_id=1844769990]
 layout_mode = 2
 size_flags_vertical = 19
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 5
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 5
+theme = ExtResource("4_yfr0m")
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer" unique_id=639820047]
+[node name="LiveDataLabel" type="Label" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataContainer/PanelContainer/MarginContainer" unique_id=1285674634]
 layout_mode = 2
-alignment = 1
-
-[node name="LiveDataLabel" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer" unique_id=1285674634]
-layout_mode = 2
-theme = ExtResource("3_4edgx")
+theme = ExtResource("4_yfr0m")
 theme_override_font_sizes/font_size = 40
 text = "Live Data"
 horizontal_alignment = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer" unique_id=828249612]
+[node name="HSeparator4" type="HSeparator" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataContainer" unique_id=757559906]
 layout_mode = 2
-alignment = 1
+theme_override_styles/separator = SubResource("StyleBoxEmpty_thdsw")
 
-[node name="LiveDataUpdateLabel" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1462001862]
+[node name="LiveDataPanelContainer" type="PanelContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataContainer" unique_id=552625751]
+texture_filter = 1
 layout_mode = 2
-theme = ExtResource("3_4edgx")
-text = "Last Updated (Park's Local Time):"
-horizontal_alignment = 1
+theme = ExtResource("4_yfr0m")
+theme_override_styles/panel = ExtResource("5_o0xlo")
 
-[node name="LiveDataUpdateTimeLabel" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1547871931]
-unique_name_in_owner = true
-layout_mode = 2
-theme = ExtResource("3_4edgx")
-text = "NEVER"
-horizontal_alignment = 1
-
-[node name="CurrentStatusPanelContainer" type="PanelContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer" unique_id=1951320733]
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_3wy1v")
-
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/CurrentStatusPanelContainer" unique_id=16715842]
+[node name="MarginContainer" type="MarginContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataContainer/LiveDataPanelContainer" unique_id=603224533]
 layout_mode = 2
 size_flags_vertical = 19
-theme_override_constants/margin_left = 4
-theme_override_constants/margin_top = 2
-theme_override_constants/margin_right = 4
-theme_override_constants/margin_bottom = 2
-
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/CurrentStatusPanelContainer/MarginContainer" unique_id=1756980548]
-layout_mode = 2
-alignment = 1
-
-[node name="Label" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/CurrentStatusPanelContainer/MarginContainer/HBoxContainer" unique_id=1715222503]
-layout_mode = 2
-theme = ExtResource("3_4edgx")
-theme_override_font_sizes/font_size = 28
-text = "Current Status: "
-horizontal_alignment = 1
-
-[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/CurrentStatusPanelContainer/MarginContainer/HBoxContainer" unique_id=1963776654]
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_3wy1v")
-
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/CurrentStatusPanelContainer/MarginContainer/HBoxContainer/PanelContainer" unique_id=996108275]
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_constants/margin_left = 4
-theme_override_constants/margin_top = 2
-theme_override_constants/margin_right = 4
-theme_override_constants/margin_bottom = 2
-
-[node name="CurrentStatusLabel" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/CurrentStatusPanelContainer/MarginContainer/HBoxContainer/PanelContainer/MarginContainer" unique_id=1060298044]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_font_sizes/font_size = 25
-text = "NOT FOUND"
-
-[node name="QueueTimePanelContainer" type="PanelContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer" unique_id=122440915]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_3wy1v")
-
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer" unique_id=922144444]
-layout_mode = 2
-size_flags_vertical = 19
-theme_override_constants/margin_left = 4
-theme_override_constants/margin_top = 2
-theme_override_constants/margin_right = 4
-theme_override_constants/margin_bottom = 2
-
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer" unique_id=1640157768]
-layout_mode = 2
-alignment = 1
-
-[node name="Label" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer" unique_id=953820200]
-layout_mode = 2
-theme = ExtResource("3_4edgx")
-theme_override_font_sizes/font_size = 28
-text = "Queue Time:    "
-horizontal_alignment = 1
-
-[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer" unique_id=226765926]
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_3wy1v")
-
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer/PanelContainer" unique_id=432403720]
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_constants/margin_left = 4
-theme_override_constants/margin_top = 2
-theme_override_constants/margin_right = 4
-theme_override_constants/margin_bottom = 2
-
-[node name="CurrentQueueTimeLabel" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer/PanelContainer/MarginContainer" unique_id=2054222315]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_font_sizes/font_size = 25
-text = "0"
-
-[node name="DailyDataPanelContainer" type="PanelContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer" unique_id=1998255226]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_3wy1v")
-
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer" unique_id=1616713595]
-layout_mode = 2
-size_flags_vertical = 19
+theme = ExtResource("4_yfr0m")
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 5
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer" unique_id=1884954287]
+[node name="VBoxContainer" type="VBoxContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataContainer/LiveDataPanelContainer/MarginContainer" unique_id=639820047]
 layout_mode = 2
+theme = ExtResource("4_yfr0m")
 alignment = 1
 
-[node name="DailyDataLabel" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer" unique_id=1024646953]
+[node name="PanelContainer" type="PanelContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer" unique_id=2060341351]
+texture_filter = 1
 layout_mode = 2
-theme = ExtResource("3_4edgx")
+theme = ExtResource("4_yfr0m")
+
+[node name="MarginContainer" type="MarginContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/PanelContainer" unique_id=186818346]
+layout_mode = 2
+size_flags_vertical = 19
+theme = ExtResource("4_yfr0m")
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/PanelContainer/MarginContainer" unique_id=828249612]
+layout_mode = 2
+theme = ExtResource("4_yfr0m")
+alignment = 1
+
+[node name="LiveDataUpdateLabel" type="Label" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/HBoxContainer" unique_id=1462001862]
+layout_mode = 2
+theme = ExtResource("4_yfr0m")
+text = "Last Updated (Park's Local Time):"
+horizontal_alignment = 1
+
+[node name="LiveDataUpdateTimeLabel" type="Label" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/HBoxContainer" unique_id=1547871931]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("4_yfr0m")
+text = "NEVER"
+horizontal_alignment = 1
+
+[node name="PanelContainer2" type="PanelContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer" unique_id=68954105]
+texture_filter = 1
+layout_mode = 2
+theme = ExtResource("4_yfr0m")
+
+[node name="MarginContainer" type="MarginContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/PanelContainer2" unique_id=1906155303]
+layout_mode = 2
+size_flags_vertical = 19
+theme = ExtResource("4_yfr0m")
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/PanelContainer2/MarginContainer" unique_id=922430762]
+layout_mode = 2
+
+[node name="CurrentStatusPanelContainer" type="PanelContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/PanelContainer2/MarginContainer/VBoxContainer" unique_id=1951320733]
+layout_mode = 2
+theme = ExtResource("4_yfr0m")
+theme_override_styles/panel = SubResource("StyleBoxTexture_3odmw")
+
+[node name="MarginContainer" type="MarginContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/PanelContainer2/MarginContainer/VBoxContainer/CurrentStatusPanelContainer" unique_id=16715842]
+layout_mode = 2
+size_flags_vertical = 19
+theme = ExtResource("4_yfr0m")
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/PanelContainer2/MarginContainer/VBoxContainer/CurrentStatusPanelContainer/MarginContainer" unique_id=1756980548]
+layout_mode = 2
+theme = ExtResource("4_yfr0m")
+alignment = 1
+
+[node name="Label" type="Label" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/PanelContainer2/MarginContainer/VBoxContainer/CurrentStatusPanelContainer/MarginContainer/HBoxContainer" unique_id=1715222503]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("4_yfr0m")
+theme_override_font_sizes/font_size = 28
+text = "Current Status:"
+horizontal_alignment = 1
+
+[node name="VSeparator" type="VSeparator" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/PanelContainer2/MarginContainer/VBoxContainer/CurrentStatusPanelContainer/MarginContainer/HBoxContainer" unique_id=673665284]
+layout_mode = 2
+theme = ExtResource("4_yfr0m")
+
+[node name="CurrentStatusLabel" type="Label" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/PanelContainer2/MarginContainer/VBoxContainer/CurrentStatusPanelContainer/MarginContainer/HBoxContainer" unique_id=1060298044]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("4_yfr0m")
+theme_override_font_sizes/font_size = 25
+text = "NOT FOUND"
+horizontal_alignment = 1
+
+[node name="QueueTimePanelContainer" type="PanelContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/PanelContainer2/MarginContainer/VBoxContainer" unique_id=122440915]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("4_yfr0m")
+theme_override_styles/panel = SubResource("StyleBoxTexture_3odmw")
+
+[node name="MarginContainer" type="MarginContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/PanelContainer2/MarginContainer/VBoxContainer/QueueTimePanelContainer" unique_id=922144444]
+layout_mode = 2
+size_flags_vertical = 19
+theme = ExtResource("4_yfr0m")
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/PanelContainer2/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer" unique_id=1640157768]
+layout_mode = 2
+theme = ExtResource("4_yfr0m")
+alignment = 1
+
+[node name="Label" type="Label" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/PanelContainer2/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer" unique_id=953820200]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("4_yfr0m")
+theme_override_font_sizes/font_size = 28
+text = "Queue Time:"
+horizontal_alignment = 1
+
+[node name="VSeparator" type="VSeparator" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/PanelContainer2/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer" unique_id=1758487415]
+layout_mode = 2
+theme = ExtResource("4_yfr0m")
+
+[node name="CurrentQueueTimeLabel" type="Label" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataContainer/LiveDataPanelContainer/MarginContainer/VBoxContainer/PanelContainer2/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer" unique_id=2054222315]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(55, 0)
+layout_mode = 2
+theme = ExtResource("4_yfr0m")
+theme_override_font_sizes/font_size = 25
+text = "0"
+horizontal_alignment = 1
+
+[node name="HSeparator2" type="HSeparator" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataContainer" unique_id=929971783]
+layout_mode = 2
+theme_override_constants/separation = 16
+theme_override_styles/separator = SubResource("StyleBoxEmpty_thdsw")
+
+[node name="DailyDataContainer" type="VBoxContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer" unique_id=1177622020]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer" unique_id=1503908590]
+texture_filter = 1
+layout_mode = 2
+theme = ExtResource("4_yfr0m")
+theme_override_styles/panel = ExtResource("5_o0xlo")
+
+[node name="MarginContainer" type="MarginContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer/PanelContainer" unique_id=1709293787]
+layout_mode = 2
+size_flags_vertical = 19
+theme = ExtResource("4_yfr0m")
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 0
+
+[node name="DailyDataLabel" type="Label" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer/PanelContainer/MarginContainer" unique_id=1024646953]
+layout_mode = 2
+theme = ExtResource("4_yfr0m")
 theme_override_font_sizes/font_size = 40
 text = "Daily Data"
 horizontal_alignment = 1
 
-[node name="TimeDataPanelContainer" type="PanelContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer" unique_id=849719728]
+[node name="DailyDataPanelContainer" type="PanelContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer" unique_id=1998255226]
+texture_filter = 1
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_3wy1v")
+theme = ExtResource("4_yfr0m")
+theme_override_styles/panel = ExtResource("5_o0xlo")
 
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimeDataPanelContainer" unique_id=313073378]
+[node name="MarginContainer" type="MarginContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer/DailyDataPanelContainer" unique_id=1616713595]
 layout_mode = 2
 size_flags_vertical = 19
-theme_override_constants/margin_left = 4
-theme_override_constants/margin_top = 2
-theme_override_constants/margin_right = 4
-theme_override_constants/margin_bottom = 2
+theme = ExtResource("4_yfr0m")
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
 
-[node name="HBoxContainer" type="VBoxContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimeDataPanelContainer/MarginContainer" unique_id=1659883492]
+[node name="VBoxContainer" type="VBoxContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer/DailyDataPanelContainer/MarginContainer" unique_id=1884954287]
 layout_mode = 2
+theme = ExtResource("4_yfr0m")
 alignment = 1
 
-[node name="Label" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimeDataPanelContainer/MarginContainer/HBoxContainer" unique_id=2108197892]
+[node name="PanelContainer" type="PanelContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer" unique_id=1722980828]
 layout_mode = 2
-theme = ExtResource("3_4edgx")
+theme = ExtResource("4_yfr0m")
+
+[node name="MarginContainer" type="MarginContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/PanelContainer" unique_id=1957224740]
+layout_mode = 2
+size_flags_vertical = 19
+theme = ExtResource("4_yfr0m")
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 0
+
+[node name="Label" type="Label" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/PanelContainer/MarginContainer" unique_id=2108197892]
+layout_mode = 2
+theme = ExtResource("4_yfr0m")
 theme_override_font_sizes/font_size = 28
 text = "Time Data"
 horizontal_alignment = 1
 
-[node name="TimePanelContainer" type="PanelContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimeDataPanelContainer/MarginContainer/HBoxContainer" unique_id=361528944]
+[node name="TimePanelContainer" type="PanelContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer" unique_id=361528944]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_3wy1v")
+theme = ExtResource("4_yfr0m")
 
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimeDataPanelContainer/MarginContainer/HBoxContainer/TimePanelContainer" unique_id=2045671697]
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_constants/margin_left = 4
-theme_override_constants/margin_top = 2
-theme_override_constants/margin_right = 4
-theme_override_constants/margin_bottom = 2
-
-[node name="GridContainer" type="VBoxContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimeDataPanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer" unique_id=2013878321]
-layout_mode = 2
-
-[node name="OperationHBoxContainer" type="HBoxContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimeDataPanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer" unique_id=246617467]
-layout_mode = 2
-alignment = 1
-
-[node name="OperatingMinutesNameLabel" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimeDataPanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer/OperationHBoxContainer" unique_id=1066073250]
-layout_mode = 2
-theme_override_font_sizes/font_size = 25
-text = "Operating Minutes:       "
-
-[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimeDataPanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer/OperationHBoxContainer" unique_id=1399106529]
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_3wy1v")
-
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimeDataPanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer/OperationHBoxContainer/PanelContainer" unique_id=1122492804]
+[node name="MarginContainer" type="MarginContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimePanelContainer" unique_id=2045671697]
 layout_mode = 2
 size_flags_vertical = 3
+theme = ExtResource("4_yfr0m")
 theme_override_constants/margin_left = 4
-theme_override_constants/margin_top = 2
+theme_override_constants/margin_top = 4
 theme_override_constants/margin_right = 4
-theme_override_constants/margin_bottom = 2
+theme_override_constants/margin_bottom = 4
 
-[node name="OperatingMinutesTimeLabel" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimeDataPanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer/OperationHBoxContainer/PanelContainer/MarginContainer" unique_id=1901389919]
-unique_name_in_owner = true
+[node name="GridContainer" type="VBoxContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimePanelContainer/MarginContainer" unique_id=2013878321]
 layout_mode = 2
-theme_override_font_sizes/font_size = 25
-text = "436"
+theme = ExtResource("4_yfr0m")
 
-[node name="ClosedHBoxContainer" type="HBoxContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimeDataPanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer" unique_id=293662777]
+[node name="PanelContainer" type="PanelContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimePanelContainer/MarginContainer/GridContainer" unique_id=1019928597]
 layout_mode = 2
-alignment = 1
+size_flags_horizontal = 3
+theme = ExtResource("4_yfr0m")
+theme_override_styles/panel = SubResource("StyleBoxTexture_3odmw")
 
-[node name="ClosedMinutesNameLabel" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimeDataPanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer/ClosedHBoxContainer" unique_id=366060491]
-layout_mode = 2
-theme_override_font_sizes/font_size = 25
-text = "Down Minutes:              "
-
-[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimeDataPanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer/ClosedHBoxContainer" unique_id=1406966732]
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_3wy1v")
-
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimeDataPanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer/ClosedHBoxContainer/PanelContainer" unique_id=307532553]
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_constants/margin_left = 4
-theme_override_constants/margin_top = 2
-theme_override_constants/margin_right = 4
-theme_override_constants/margin_bottom = 2
-
-[node name="ClosedMinutesTimeLabel" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimeDataPanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer/ClosedHBoxContainer/PanelContainer/MarginContainer" unique_id=1979209168]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_font_sizes/font_size = 25
-text = "436"
-
-[node name="UnknownHBoxContainer" type="HBoxContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimeDataPanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer" unique_id=1541627255]
-layout_mode = 2
-alignment = 1
-
-[node name="UnknownMinutesNameLabel" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimeDataPanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer/UnknownHBoxContainer" unique_id=1290368006]
-layout_mode = 2
-theme_override_font_sizes/font_size = 25
-text = "Unknown Minutes:        "
-
-[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimeDataPanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer/UnknownHBoxContainer" unique_id=1558895968]
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_3wy1v")
-
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimeDataPanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer/UnknownHBoxContainer/PanelContainer" unique_id=1805469098]
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_constants/margin_left = 4
-theme_override_constants/margin_top = 2
-theme_override_constants/margin_right = 4
-theme_override_constants/margin_bottom = 2
-
-[node name="UnknownMinutesTimeLabel" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimeDataPanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer/UnknownHBoxContainer/PanelContainer/MarginContainer" unique_id=972608190]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_font_sizes/font_size = 25
-text = "436"
-
-[node name="QueueTimePanelContainer" type="PanelContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer" unique_id=1014938411]
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_3wy1v")
-
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer" unique_id=526616123]
+[node name="MarginContainer" type="MarginContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimePanelContainer/MarginContainer/GridContainer/PanelContainer" unique_id=1295866508]
 layout_mode = 2
 size_flags_vertical = 19
+theme = ExtResource("4_yfr0m")
 theme_override_constants/margin_left = 4
-theme_override_constants/margin_top = 2
+theme_override_constants/margin_top = 4
 theme_override_constants/margin_right = 4
-theme_override_constants/margin_bottom = 2
+theme_override_constants/margin_bottom = 0
 
-[node name="HBoxContainer" type="VBoxContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer" unique_id=1279545471]
+[node name="HBoxContainer" type="HBoxContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimePanelContainer/MarginContainer/GridContainer/PanelContainer/MarginContainer" unique_id=2048478600]
 layout_mode = 2
+theme = ExtResource("4_yfr0m")
 alignment = 1
 
-[node name="Label" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer" unique_id=1813320448]
+[node name="OperatingMinutesNameLabel" type="Label" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimePanelContainer/MarginContainer/GridContainer/PanelContainer/MarginContainer/HBoxContainer" unique_id=1066073250]
 layout_mode = 2
-theme = ExtResource("3_4edgx")
+size_flags_horizontal = 3
+theme = ExtResource("4_yfr0m")
+theme_override_font_sizes/font_size = 25
+text = "Minutes Operating:"
+horizontal_alignment = 1
+
+[node name="VSeparator" type="VSeparator" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimePanelContainer/MarginContainer/GridContainer/PanelContainer/MarginContainer/HBoxContainer" unique_id=553577319]
+layout_mode = 2
+theme = ExtResource("4_yfr0m")
+
+[node name="OperatingMinutesTimeLabel" type="Label" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimePanelContainer/MarginContainer/GridContainer/PanelContainer/MarginContainer/HBoxContainer" unique_id=1901389919]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(55, 0)
+layout_mode = 2
+theme = ExtResource("4_yfr0m")
+theme_override_font_sizes/font_size = 25
+text = "0"
+horizontal_alignment = 1
+
+[node name="PanelContainer2" type="PanelContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimePanelContainer/MarginContainer/GridContainer" unique_id=906843046]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("4_yfr0m")
+theme_override_styles/panel = SubResource("StyleBoxTexture_3odmw")
+
+[node name="MarginContainer" type="MarginContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimePanelContainer/MarginContainer/GridContainer/PanelContainer2" unique_id=545333942]
+layout_mode = 2
+size_flags_vertical = 19
+theme = ExtResource("4_yfr0m")
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimePanelContainer/MarginContainer/GridContainer/PanelContainer2/MarginContainer" unique_id=950732359]
+layout_mode = 2
+theme = ExtResource("4_yfr0m")
+alignment = 1
+
+[node name="ClosedMinutesNameLabel" type="Label" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimePanelContainer/MarginContainer/GridContainer/PanelContainer2/MarginContainer/HBoxContainer" unique_id=366060491]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("4_yfr0m")
+theme_override_font_sizes/font_size = 25
+text = "Minutes Closed:"
+horizontal_alignment = 1
+
+[node name="VSeparator" type="VSeparator" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimePanelContainer/MarginContainer/GridContainer/PanelContainer2/MarginContainer/HBoxContainer" unique_id=446469231]
+layout_mode = 2
+theme = ExtResource("4_yfr0m")
+
+[node name="ClosedMinutesTimeLabel" type="Label" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimePanelContainer/MarginContainer/GridContainer/PanelContainer2/MarginContainer/HBoxContainer" unique_id=1979209168]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(55, 0)
+layout_mode = 2
+theme = ExtResource("4_yfr0m")
+theme_override_font_sizes/font_size = 25
+text = "0"
+horizontal_alignment = 1
+
+[node name="PanelContainer3" type="PanelContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimePanelContainer/MarginContainer/GridContainer" unique_id=1651120673]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("4_yfr0m")
+theme_override_styles/panel = SubResource("StyleBoxTexture_3odmw")
+
+[node name="MarginContainer" type="MarginContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimePanelContainer/MarginContainer/GridContainer/PanelContainer3" unique_id=1096258244]
+layout_mode = 2
+size_flags_vertical = 19
+theme = ExtResource("4_yfr0m")
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimePanelContainer/MarginContainer/GridContainer/PanelContainer3/MarginContainer" unique_id=1361933911]
+layout_mode = 2
+theme = ExtResource("4_yfr0m")
+alignment = 1
+
+[node name="UnknownMinutesNameLabel" type="Label" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimePanelContainer/MarginContainer/GridContainer/PanelContainer3/MarginContainer/HBoxContainer" unique_id=1290368006]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("4_yfr0m")
+theme_override_font_sizes/font_size = 25
+text = "Unknown Minutes:"
+horizontal_alignment = 1
+
+[node name="VSeparator" type="VSeparator" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimePanelContainer/MarginContainer/GridContainer/PanelContainer3/MarginContainer/HBoxContainer" unique_id=974959103]
+layout_mode = 2
+theme = ExtResource("4_yfr0m")
+
+[node name="UnknownMinutesTimeLabel" type="Label" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimePanelContainer/MarginContainer/GridContainer/PanelContainer3/MarginContainer/HBoxContainer" unique_id=972608190]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(55, 0)
+layout_mode = 2
+theme = ExtResource("4_yfr0m")
+theme_override_font_sizes/font_size = 25
+text = "0"
+horizontal_alignment = 1
+
+[node name="HSeparator2" type="HSeparator" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer" unique_id=905052222]
+layout_mode = 2
+theme_override_constants/separation = 20
+theme_override_styles/separator = SubResource("StyleBoxEmpty_thdsw")
+
+[node name="PanelContainer2" type="PanelContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer" unique_id=526728895]
+layout_mode = 2
+theme = ExtResource("4_yfr0m")
+
+[node name="MarginContainer" type="MarginContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/PanelContainer2" unique_id=1161930125]
+layout_mode = 2
+size_flags_vertical = 19
+theme = ExtResource("4_yfr0m")
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 0
+
+[node name="Label" type="Label" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/PanelContainer2/MarginContainer" unique_id=1977889004]
+layout_mode = 2
+theme = ExtResource("4_yfr0m")
 theme_override_font_sizes/font_size = 28
 text = "Queue Times"
 horizontal_alignment = 1
 
-[node name="TimePanelContainer" type="PanelContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer" unique_id=2036997068]
+[node name="TimePanelContainer2" type="PanelContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer" unique_id=2036997068]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_3wy1v")
+theme = ExtResource("4_yfr0m")
 
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer/TimePanelContainer" unique_id=423271484]
+[node name="MarginContainer" type="MarginContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimePanelContainer2" unique_id=423271484]
 layout_mode = 2
 size_flags_vertical = 3
+theme = ExtResource("4_yfr0m")
 theme_override_constants/margin_left = 4
 theme_override_constants/margin_top = 2
 theme_override_constants/margin_right = 4
 theme_override_constants/margin_bottom = 2
 
-[node name="GridContainer" type="VBoxContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer" unique_id=105469361]
+[node name="GridContainer" type="VBoxContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimePanelContainer2/MarginContainer" unique_id=105469361]
 layout_mode = 2
+theme = ExtResource("4_yfr0m")
 
-[node name="MinHBoxContainer" type="HBoxContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer" unique_id=1412757668]
+[node name="PanelContainer" type="PanelContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimePanelContainer2/MarginContainer/GridContainer" unique_id=362821353]
 layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("4_yfr0m")
+theme_override_styles/panel = SubResource("StyleBoxTexture_3odmw")
+
+[node name="MarginContainer" type="MarginContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimePanelContainer2/MarginContainer/GridContainer/PanelContainer" unique_id=1213133892]
+layout_mode = 2
+size_flags_vertical = 19
+theme = ExtResource("4_yfr0m")
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimePanelContainer2/MarginContainer/GridContainer/PanelContainer/MarginContainer" unique_id=1020404499]
+layout_mode = 2
+theme = ExtResource("4_yfr0m")
 alignment = 1
 
-[node name="MinimumMinutesNameLabel" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer/MinHBoxContainer" unique_id=310149635]
+[node name="MinimumMinutesNameLabel" type="Label" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimePanelContainer2/MarginContainer/GridContainer/PanelContainer/MarginContainer/HBoxContainer" unique_id=310149635]
 layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("4_yfr0m")
 theme_override_font_sizes/font_size = 25
-text = "Minimum Minutes:       "
+text = "Minimum Minutes:"
+horizontal_alignment = 1
 
-[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer/MinHBoxContainer" unique_id=868801424]
+[node name="VSeparator" type="VSeparator" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimePanelContainer2/MarginContainer/GridContainer/PanelContainer/MarginContainer/HBoxContainer" unique_id=1982677440]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_3wy1v")
+theme = ExtResource("4_yfr0m")
 
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer/MinHBoxContainer/PanelContainer" unique_id=104659031]
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_constants/margin_left = 4
-theme_override_constants/margin_top = 2
-theme_override_constants/margin_right = 4
-theme_override_constants/margin_bottom = 2
-
-[node name="MinimumMinutesTimeLabel" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer/MinHBoxContainer/PanelContainer/MarginContainer" unique_id=1974068853]
+[node name="MinimumMinutesTimeLabel" type="Label" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimePanelContainer2/MarginContainer/GridContainer/PanelContainer/MarginContainer/HBoxContainer" unique_id=1974068853]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(55, 0)
 layout_mode = 2
+theme = ExtResource("4_yfr0m")
 theme_override_font_sizes/font_size = 25
-text = "85"
+text = "0"
+horizontal_alignment = 1
 
-[node name="MaxHBoxContainer" type="HBoxContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer" unique_id=1488553178]
+[node name="PanelContainer2" type="PanelContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimePanelContainer2/MarginContainer/GridContainer" unique_id=962977371]
 layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("4_yfr0m")
+theme_override_styles/panel = SubResource("StyleBoxTexture_3odmw")
+
+[node name="MarginContainer" type="MarginContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimePanelContainer2/MarginContainer/GridContainer/PanelContainer2" unique_id=237349146]
+layout_mode = 2
+size_flags_vertical = 19
+theme = ExtResource("4_yfr0m")
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimePanelContainer2/MarginContainer/GridContainer/PanelContainer2/MarginContainer" unique_id=1134974363]
+layout_mode = 2
+theme = ExtResource("4_yfr0m")
 alignment = 1
 
-[node name="MaxMinutesNameLabel" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer/MaxHBoxContainer" unique_id=1730161870]
+[node name="MaxMinutesNameLabel" type="Label" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimePanelContainer2/MarginContainer/GridContainer/PanelContainer2/MarginContainer/HBoxContainer" unique_id=1730161870]
 layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("4_yfr0m")
 theme_override_font_sizes/font_size = 25
-text = "Maximum Minutes:      "
+text = "Maximum Minutes:"
+horizontal_alignment = 1
 
-[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer/MaxHBoxContainer" unique_id=1404564226]
+[node name="VSeparator" type="VSeparator" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimePanelContainer2/MarginContainer/GridContainer/PanelContainer2/MarginContainer/HBoxContainer" unique_id=2044570816]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_3wy1v")
+theme = ExtResource("4_yfr0m")
 
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer/MaxHBoxContainer/PanelContainer" unique_id=1392717145]
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_constants/margin_left = 4
-theme_override_constants/margin_top = 2
-theme_override_constants/margin_right = 4
-theme_override_constants/margin_bottom = 2
-
-[node name="MaximumMinutesTimeLabel" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer/MaxHBoxContainer/PanelContainer/MarginContainer" unique_id=958706433]
+[node name="MaximumMinutesTimeLabel" type="Label" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimePanelContainer2/MarginContainer/GridContainer/PanelContainer2/MarginContainer/HBoxContainer" unique_id=958706433]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(55, 0)
 layout_mode = 2
+theme = ExtResource("4_yfr0m")
 theme_override_font_sizes/font_size = 25
-text = "85"
+text = "0"
+horizontal_alignment = 1
 
-[node name="AverageHBoxContainer" type="HBoxContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer" unique_id=311549]
+[node name="PanelContainer3" type="PanelContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimePanelContainer2/MarginContainer/GridContainer" unique_id=387382101]
 layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("4_yfr0m")
+theme_override_styles/panel = SubResource("StyleBoxTexture_3odmw")
+
+[node name="MarginContainer" type="MarginContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimePanelContainer2/MarginContainer/GridContainer/PanelContainer3" unique_id=719416857]
+layout_mode = 2
+size_flags_vertical = 19
+theme = ExtResource("4_yfr0m")
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimePanelContainer2/MarginContainer/GridContainer/PanelContainer3/MarginContainer" unique_id=155143163]
+layout_mode = 2
+theme = ExtResource("4_yfr0m")
 alignment = 1
 
-[node name="AverageMinutesNameLabel" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer/AverageHBoxContainer" unique_id=1778714827]
+[node name="AverageMinutesNameLabel" type="Label" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimePanelContainer2/MarginContainer/GridContainer/PanelContainer3/MarginContainer/HBoxContainer" unique_id=1778714827]
 layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("4_yfr0m")
 theme_override_font_sizes/font_size = 25
-text = "Average Minutes:          "
+text = "Average Minutes:"
+horizontal_alignment = 1
 
-[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer/AverageHBoxContainer" unique_id=394691325]
+[node name="VSeparator" type="VSeparator" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimePanelContainer2/MarginContainer/GridContainer/PanelContainer3/MarginContainer/HBoxContainer" unique_id=2002221475]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_3wy1v")
+theme = ExtResource("4_yfr0m")
 
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer/AverageHBoxContainer/PanelContainer" unique_id=143303806]
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_constants/margin_left = 4
-theme_override_constants/margin_top = 2
-theme_override_constants/margin_right = 4
-theme_override_constants/margin_bottom = 2
-
-[node name="AverageMinutesTimeLabel" type="Label" parent="VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/QueueTimePanelContainer/MarginContainer/HBoxContainer/TimePanelContainer/MarginContainer/GridContainer/AverageHBoxContainer/PanelContainer/MarginContainer" unique_id=45123937]
+[node name="AverageMinutesTimeLabel" type="Label" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer/DailyDataPanelContainer/MarginContainer/VBoxContainer/TimePanelContainer2/MarginContainer/GridContainer/PanelContainer3/MarginContainer/HBoxContainer" unique_id=45123937]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(55, 0)
 layout_mode = 2
+theme = ExtResource("4_yfr0m")
 theme_override_font_sizes/font_size = 25
-text = "85"
+text = "0"
+horizontal_alignment = 1
+
+[node name="HSeparator4" type="HSeparator" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/DailyDataContainer" unique_id=1693117071]
+layout_mode = 2
+theme_override_constants/separation = 16
+theme_override_styles/separator = SubResource("StyleBoxEmpty_thdsw")

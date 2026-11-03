@@ -1,0 +1,10 @@
+[gd_resource type="StyleBoxTexture" format=3 uid="uid://cetak7f238vsu"]
+
+[ext_resource type="Texture2D" uid="uid://c3lpdfck1moyd" path="res://popup_window/popup_window_border/visuals/containers/raised_container.png" id="1_ideks"]
+
+[resource]
+texture = ExtResource("1_ideks")
+texture_margin_left = 4.0
+texture_margin_top = 4.0
+texture_margin_right = 4.0
+texture_margin_bottom = 4.0

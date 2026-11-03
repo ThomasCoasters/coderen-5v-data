@@ -2,6 +2,9 @@
 
 [ext_resource type="Script" uid="uid://decre6o8k15c7" path="res://popup_window/runtime/park_selection/park_selection_window.gd" id="1_cd3np"]
 [ext_resource type="Texture2D" uid="uid://c0xlq53bum1yo" path="res://desktop_icons/visuals/park.svg" id="2_3h44w"]
+[ext_resource type="Texture2D" uid="uid://dm0q76ilbw04c" path="res://popup_window/popup_window_border/visuals/window_bg/window_bg.png" id="3_3h44w"]
+[ext_resource type="Theme" uid="uid://bndopykkard70" path="res://main/win_98/windows_98.tres" id="4_013ej"]
+[ext_resource type="StyleBox" uid="uid://cetak7f238vsu" path="res://main/win_98/raised_container_texture.tres" id="5_cijc4"]
 
 [node name="ParkSelectionWindow" type="Window" unique_id=699555340 node_paths=PackedStringArray("border_parent_override")]
 transparent_bg = true
@@ -18,7 +21,7 @@ content_scale_size = Vector2i(800, 900)
 script = ExtResource("1_cd3np")
 setup_done = true
 window_name = "Park Selection"
-border_parent_override = NodePath("VBoxContainer")
+border_parent_override = NodePath("ContentMarginContainer/VBoxContainer")
 border_index_override = 0
 border_properties = Dictionary[StringName, Variant]({
 &"global_dragging": false,
@@ -30,28 +33,39 @@ window_icon = ExtResource("2_3h44w")
 window_name = "Park Selection"
 metadata/_custom_type_script = "uid://wyrg2bi6c1nu"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1255319670]
+[node name="Background" type="NinePatchRect" parent="." unique_id=100547916]
+texture_filter = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+texture = ExtResource("3_3h44w")
+patch_margin_left = 6
+patch_margin_top = 6
+patch_margin_right = 6
+patch_margin_bottom = 6
+
+[node name="ContentMarginContainer" type="MarginContainer" parent="." unique_id=936597193]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 6
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ContentMarginContainer" unique_id=1255319670]
+layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="Control" type="Control" parent="VBoxContainer" unique_id=1135621305]
+[node name="Control" type="Control" parent="ContentMarginContainer/VBoxContainer" unique_id=1135621305]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="ColorRect" type="ColorRect" parent="VBoxContainer/Control" unique_id=1184154550]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.11764706, 0.11764706, 0.11764706, 1)
-
-[node name="Modifiers" type="Control" parent="VBoxContainer/Control" unique_id=766602167]
+[node name="Modifiers" type="Control" parent="ContentMarginContainer/VBoxContainer/Control" unique_id=766602167]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -62,28 +76,56 @@ size_flags_vertical = 3
 mouse_filter = 2
 mouse_behavior_recursive = 1
 
-[node name="VScrollBar" type="ScrollContainer" parent="VBoxContainer/Control" unique_id=1978888720]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-horizontal_scroll_mode = 0
-scroll_hint_mode = 1
-
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Control/VScrollBar" unique_id=85356643]
-layout_mode = 2
+[node name="VBoxContainer" type="VBoxContainer" parent="ContentMarginContainer/VBoxContainer/Control" unique_id=85356643]
+layout_mode = 0
+offset_right = 788.0
+offset_bottom = 865.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="SearchLineEdit" type="LineEdit" parent="VBoxContainer/Control/VScrollBar/VBoxContainer" unique_id=1892874121]
+[node name="PanelContainer" type="PanelContainer" parent="ContentMarginContainer/VBoxContainer/Control/VBoxContainer" unique_id=198159449]
+texture_filter = 1
+layout_mode = 2
+theme = ExtResource("4_013ej")
+theme_override_styles/panel = ExtResource("5_cijc4")
+
+[node name="MarginContainer" type="MarginContainer" parent="ContentMarginContainer/VBoxContainer/Control/VBoxContainer/PanelContainer" unique_id=25201955]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="SearchLineEdit" type="LineEdit" parent="ContentMarginContainer/VBoxContainer/Control/VBoxContainer/PanelContainer/MarginContainer" unique_id=1892874121]
 unique_name_in_owner = true
 layout_mode = 2
+theme = ExtResource("4_013ej")
 placeholder_text = "Search"
 alignment = 1
 
-[node name="GridContainer" type="GridContainer" parent="VBoxContainer/Control/VScrollBar/VBoxContainer" unique_id=466102301]
+[node name="PanelContainer2" type="PanelContainer" parent="ContentMarginContainer/VBoxContainer/Control/VBoxContainer" unique_id=1792198271]
+texture_filter = 1
+layout_mode = 2
+size_flags_vertical = 3
+theme = ExtResource("4_013ej")
+theme_override_styles/panel = ExtResource("5_cijc4")
+
+[node name="MarginContainer" type="MarginContainer" parent="ContentMarginContainer/VBoxContainer/Control/VBoxContainer/PanelContainer2" unique_id=2054548713]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="ScrollBar" type="ScrollContainer" parent="ContentMarginContainer/VBoxContainer/Control/VBoxContainer/PanelContainer2/MarginContainer" unique_id=1978888720]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+scroll_vertical_custom_step = 500.0
+horizontal_scroll_mode = 0
+scroll_hint_mode = 1
+
+[node name="GridContainer" type="GridContainer" parent="ContentMarginContainer/VBoxContainer/Control/VBoxContainer/PanelContainer2/MarginContainer/ScrollBar" unique_id=466102301]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3

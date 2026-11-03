@@ -58,8 +58,8 @@ script = ExtResource("1_ejaqx")
 setup_done = true
 window_name = " - Park Map"
 initial_desktop_icons = Array[ExtResource("2_67vt5")]([SubResource("Resource_p4txh"), SubResource("Resource_1jmkj")])
-modifier_parent_node = NodePath("MarginContainer/VBoxContainer/Control/Modifiers")
-border_parent_override = NodePath("MarginContainer/VBoxContainer")
+modifier_parent_node = NodePath("ContentMarginContainer/VBoxContainer/Control/Modifiers")
+border_parent_override = NodePath("ContentMarginContainer/VBoxContainer")
 border_index_override = 0
 border_properties = Dictionary[StringName, Variant]({
 &"global_dragging": true,
@@ -78,33 +78,34 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("8_obsb7")
-patch_margin_left = 2
-patch_margin_top = 2
-patch_margin_right = 2
-patch_margin_bottom = 2
+patch_margin_left = 6
+patch_margin_top = 6
+patch_margin_right = 6
+patch_margin_bottom = 6
 
-[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1253469668]
+[node name="ContentMarginContainer" type="MarginContainer" parent="." unique_id=1253469668]
+unique_name_in_owner = true
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 2
-theme_override_constants/margin_top = 2
-theme_override_constants/margin_right = 2
-theme_override_constants/margin_bottom = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 6
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1767954796]
+[node name="VBoxContainer" type="VBoxContainer" parent="ContentMarginContainer" unique_id=1767954796]
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="Control" type="Control" parent="MarginContainer/VBoxContainer" unique_id=676515119]
+[node name="Control" type="Control" parent="ContentMarginContainer/VBoxContainer" unique_id=676515119]
 layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2
 mouse_behavior_recursive = 1
 
-[node name="ParkMapDisplayer" type="TextureRect" parent="MarginContainer/VBoxContainer/Control" unique_id=1102612136]
+[node name="ParkMapDisplayer" type="TextureRect" parent="ContentMarginContainer/VBoxContainer/Control" unique_id=1102612136]
 unique_name_in_owner = true
 layout_mode = 0
 offset_right = 1920.0
@@ -118,7 +119,7 @@ padding_pixels = 100
 backup_zoom = 17
 metadata/_custom_type_script = "uid://7svw3f7qhhnl"
 
-[node name="Modifiers" type="Control" parent="MarginContainer/VBoxContainer/Control" unique_id=47573917]
+[node name="Modifiers" type="Control" parent="ContentMarginContainer/VBoxContainer/Control" unique_id=47573917]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -127,5 +128,19 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_vertical = 3
 mouse_filter = 1
+
+[node name="ForegroundBackground" type="NinePatchRect" parent="." unique_id=1395064222]
+texture_filter = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("8_obsb7")
+draw_center = false
+patch_margin_left = 6
+patch_margin_top = 6
+patch_margin_right = 6
+patch_margin_bottom = 6
 
 [connection signal="close_requested" from="." to="." method="_on_close_requested"]
