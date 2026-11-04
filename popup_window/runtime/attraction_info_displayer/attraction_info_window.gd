@@ -79,14 +79,10 @@ func _live_data_received(
 	var response: Variant = json.data
 	
 	if not response.has("liveData") or response.liveData.is_empty():
-		var error_popup: AcceptDialog = AcceptDialog.new()
-		error_popup.title = "Error! Sorry :("
-		error_popup.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_SCREEN_WITH_MOUSE_FOCUS
-		error_popup.dialog_text = "Could not get the live data for %s, sorry for the inconvenience." %attraction.name
-		error_popup.ok_button_text = "I understand."
-		error_popup.dialog_autowrap = true
-		error_popup.visible = true
-		add_child(error_popup)
+		main.create_error_popup(
+			"Could not get the live data for [b]%s[/b], sorry for the inconvenience." %attraction.name,
+			true
+		)
 		return
 	
 	
@@ -112,7 +108,7 @@ func _live_data_received(
 	else:
 		queue_time_panel_container.show()
 	
-	if current_data.has("queue"):
+	if current_data.has("queue") and current_data.queue.has("STANDBY") and current_data.queue.STANDBY.has("waitTime"):
 		current_queue_time_label.text = str(int(current_data.queue.STANDBY.waitTime))
 	
 
@@ -129,14 +125,10 @@ func _daily_data_received(
 	var response: Variant = json.data
 	
 	if not response.has("days") or response.days.is_empty():
-		var error_popup: AcceptDialog = AcceptDialog.new()
-		error_popup.title = "Error! Sorry :("
-		error_popup.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_SCREEN_WITH_MOUSE_FOCUS
-		error_popup.dialog_text = "Could not get the daily data for %s, sorry for the inconvenience." %attraction.name
-		error_popup.ok_button_text = "I understand."
-		error_popup.dialog_autowrap = true
-		error_popup.visible = true
-		add_child(error_popup)
+		main.create_error_popup(
+			"Could not get the daily data for [b]%s[/b], sorry for the inconvenience." %attraction.name,
+			true
+		)
 		return
 	
 	data_loaded = true

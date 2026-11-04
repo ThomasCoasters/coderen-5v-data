@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://dppj255b8vt71" path="res://popup_window/popup_window_border/visuals/scrolling/up/scroll_up_pressed.png" id="5_nql18"]
 [ext_resource type="Texture2D" uid="uid://c37g2hrg5j31k" path="res://popup_window/popup_window_border/visuals/scrolling/down/scroll_down_idle.png" id="6_0heeg"]
 [ext_resource type="Texture2D" uid="uid://bi0fcbnayw0um" path="res://popup_window/popup_window_border/visuals/scrolling/down/scroll_down_hover.png" id="7_elvi7"]
+[ext_resource type="FontFile" uid="uid://cpa1dwcpvcbwg" path="res://main/win_98/MSW98UI-Bold.ttf" id="7_jj7r2"]
 [ext_resource type="Texture2D" uid="uid://bnuh5halgb6lj" path="res://popup_window/popup_window_border/visuals/scrolling/down/scroll_down_pressed.png" id="8_y0s7b"]
 [ext_resource type="Texture2D" uid="uid://dlqff6opalqbh" path="res://popup_window/popup_window_border/visuals/window_bg/plain_button.png" id="9_gbgru"]
 [ext_resource type="Texture2D" uid="uid://bolqcop3sbnim" path="res://popup_window/popup_window_border/visuals/window_bg/plain_button_hover.png" id="10_r0i6b"]
@@ -110,6 +111,12 @@ LineEdit/styles/focus = SubResource("StyleBoxTexture_yfr0m")
 LineEdit/styles/normal = SubResource("StyleBoxTexture_yfr0m")
 LineEdit/styles/read_only = SubResource("StyleBoxTexture_0heeg")
 PanelContainer/styles/panel = SubResource("StyleBoxTexture_yfr0m")
+RichTextLabel/colors/default_color = Color(0, 0, 0, 1)
+RichTextLabel/fonts/bold_font = ExtResource("7_jj7r2")
+RichTextLabel/fonts/bold_italics_font = ExtResource("7_jj7r2")
+RichTextLabel/fonts/italics_font = ExtResource("1_0g3qf")
+RichTextLabel/fonts/mono_font = ExtResource("1_0g3qf")
+RichTextLabel/fonts/normal_font = ExtResource("1_0g3qf")
 VScrollBar/icons/decrement = ExtResource("3_al8d0")
 VScrollBar/icons/decrement_highlight = ExtResource("4_jj7r2")
 VScrollBar/icons/decrement_pressed = ExtResource("5_nql18")

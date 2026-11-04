@@ -5,6 +5,8 @@
 [ext_resource type="Texture2D" uid="uid://dj3rg66s01cqt" path="res://popup_window/popup_window_border/visuals/closing/close_disabled.png" id="3_eappy"]
 [ext_resource type="Texture2D" uid="uid://bxk1ykft3050w" path="res://popup_window/popup_window_border/visuals/closing/close_idle.png" id="3_hnxiv"]
 [ext_resource type="Texture2D" uid="uid://bpdqejmrmega1" path="res://popup_window/popup_window_border/visuals/modifier_closing/modifier_close_idle.png" id="3_m01og"]
+[ext_resource type="Theme" uid="uid://bndopykkard70" path="res://main/win_98/windows_98.tres" id="3_r3lwr"]
+[ext_resource type="FontFile" uid="uid://cpa1dwcpvcbwg" path="res://main/win_98/MSW98UI-Bold.ttf" id="4_4142l"]
 [ext_resource type="Texture2D" uid="uid://co1o0ojpn0qkf" path="res://popup_window/popup_window_border/visuals/closing/close_pressed.png" id="4_vyy8y"]
 [ext_resource type="Texture2D" uid="uid://bwcuuaf61qn4o" path="res://popup_window/popup_window_border/visuals/modifier_closing/modifier_close_pressed.png" id="4_wgwdy"]
 [ext_resource type="Texture2D" uid="uid://drl63ox38uoxs" path="res://popup_window/popup_window_border/visuals/closing/close_hover.png" id="5_1qfej"]
@@ -99,6 +101,9 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
+theme = ExtResource("3_r3lwr")
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("4_4142l")
 text = "PLACEHOLDER"
 vertical_alignment = 1
 text_overrun_behavior = 6

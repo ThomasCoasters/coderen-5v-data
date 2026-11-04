@@ -8,6 +8,8 @@ extends PopupWindow
 @onready var content_margin_container: MarginContainer = %ContentMarginContainer
 
 func _ready() -> void:
+	park_map_displayer.main = main
+	
 	# connect signals from the park map displayer
 	park_map_displayer.resized.connect(_refresh_park_map_size)
 	park_map_displayer.image_refresh_requested.connect(_refresh_started)

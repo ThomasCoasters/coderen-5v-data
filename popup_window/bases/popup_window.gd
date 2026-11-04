@@ -68,6 +68,9 @@ func _validate_property(property: Dictionary) -> void:
 		property.usage |= PROPERTY_USAGE_READ_ONLY
 
 func _get_property_list() -> Array[Dictionary]:
+	if Engine.is_editor_hint():
+		return []
+	
 	var properties: Array[Dictionary] = []
 	
 	if border_scene and has_custom_border:

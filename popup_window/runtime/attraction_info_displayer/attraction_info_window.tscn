@@ -39,9 +39,6 @@ border_properties = Dictionary[StringName, Variant]({
 &"window_icon": ExtResource("2_o31ah"),
 &"window_name": "App Window"
 })
-global_dragging = false
-window_icon = ExtResource("2_o31ah")
-window_name = " - Info"
 metadata/_custom_type_script = "uid://wyrg2bi6c1nu"
 
 [node name="LiveDataRefreshTimer" type="Timer" parent="." unique_id=933698250]
@@ -99,6 +96,7 @@ mouse_filter = 2
 mouse_behavior_recursive = 1
 
 [node name="ScrollContainer" type="ScrollContainer" parent="ContentMarginContainer/VBoxContainer/Control" unique_id=1069599647]
+texture_filter = 1
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -141,6 +139,7 @@ autostart = true
 
 [node name="LiveDataContainer" type="VBoxContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer" unique_id=2119263651]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 
 [node name="PanelContainer" type="PanelContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataContainer" unique_id=326262931]
@@ -164,10 +163,6 @@ theme = ExtResource("4_yfr0m")
 theme_override_font_sizes/font_size = 40
 text = "Live Data"
 horizontal_alignment = 1
-
-[node name="HSeparator4" type="HSeparator" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataContainer" unique_id=757559906]
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_thdsw")
 
 [node name="LiveDataPanelContainer" type="PanelContainer" parent="ContentMarginContainer/VBoxContainer/Control/ScrollContainer/VBoxContainer/LiveDataContainer" unique_id=552625751]
 texture_filter = 1

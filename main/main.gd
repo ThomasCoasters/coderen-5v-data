@@ -258,3 +258,13 @@ func load_current_park() -> ParkID:
 	current_park = load(JSON.parse_string(saved_park))
 	
 	return current_park
+
+
+func create_error_popup(
+	error_text: String = "Something went wrong.",
+	bbcode_enabled: bool = false
+) -> void:
+	var error_popup: ErrorWindow = ErrorWindow.SCENE.instantiate()
+	error_popup.error_text = error_text
+	error_popup.bbcode_enabled = bbcode_enabled
+	spawn_window(error_popup, true, false)
