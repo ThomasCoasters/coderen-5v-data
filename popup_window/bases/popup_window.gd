@@ -154,7 +154,7 @@ func add_modifier(modifier: PopupWindowModifier, toggle: bool = false) -> void:
 	if existing_modifier:
 		if toggle:
 			modifiers.erase(existing_modifier)
-			existing_modifier.queue_free()
+			existing_modifier.remove()
 			
 			modifier.queue_free()
 			
@@ -233,7 +233,7 @@ func _handle_window_dragging(event: InputEvent) -> void:
 
 func _modifier_close_requested() -> void:
 	var last_modifier: PopupWindowModifier = modifiers.keys().pop_back()
-	last_modifier.queue_free()
+	last_modifier.remove()
 	modifiers.erase(last_modifier)
 	
 	if modifiers.is_empty():

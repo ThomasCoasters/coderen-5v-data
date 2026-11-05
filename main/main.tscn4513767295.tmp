@@ -1,0 +1,61 @@
+[gd_scene format=3 uid="uid://bm4s1rhk1a26i"]
+
+[ext_resource type="Script" uid="uid://m863f4fwmx22" path="res://main/main.gd" id="1_ig7tw"]
+[ext_resource type="Script" uid="uid://buwl8kix3gf5p" path="res://desktop_icons/runtime/generated_desktop_icon_settings.gd" id="2_c651c"]
+[ext_resource type="Script" uid="uid://df67yf61f3bjk" path="res://desktop_icons/runtime/generated_window_settings.gd" id="3_3wy1v"]
+[ext_resource type="PackedScene" uid="uid://5eu55bhv4a8w" path="res://popup_window/runtime/map_displayer/map_window.tscn" id="5_3wy1v"]
+[ext_resource type="PackedScene" uid="uid://rb45t1a8scgo" path="res://popup_window/runtime/park_selection/park_selection_window.tscn" id="6_kfbq2"]
+
+[sub_resource type="Resource" id="Resource_4dugh"]
+script = ExtResource("3_3wy1v")
+backup_window_scene_path = "res://main/main.tscn"
+aditional_values = Dictionary[String, Variant]({
+"exit_program": true
+})
+metadata/_custom_type_script = "uid://df67yf61f3bjk"
+
+[sub_resource type="Resource" id="Resource_3wy1v"]
+script = ExtResource("2_c651c")
+name = "EXIT PROGRAM"
+visual_icon_path = "res://desktop_icons/visuals/exit_program.ico"
+headless = null
+aditional_base_cmdline_args = null
+aditional_user_cmdline_args = null
+window_settings = SubResource("Resource_4dugh")
+metadata/_custom_type_script = "uid://buwl8kix3gf5p"
+
+[sub_resource type="Resource" id="Resource_splrk"]
+script = ExtResource("3_3wy1v")
+window_scene = ExtResource("6_kfbq2")
+metadata/_custom_type_script = "uid://df67yf61f3bjk"
+
+[sub_resource type="Resource" id="Resource_omonn"]
+script = ExtResource("2_c651c")
+name = "Select Park"
+visual_icon_path = "res://desktop_icons/visuals/park.ico"
+headless = null
+aditional_base_cmdline_args = null
+aditional_user_cmdline_args = null
+window_settings = SubResource("Resource_splrk")
+metadata/_custom_type_script = "uid://buwl8kix3gf5p"
+
+[sub_resource type="Resource" id="Resource_2klbd"]
+script = ExtResource("3_3wy1v")
+window_scene = ExtResource("5_3wy1v")
+metadata/_custom_type_script = "uid://df67yf61f3bjk"
+
+[sub_resource type="Resource" id="Resource_18dj2"]
+script = ExtResource("2_c651c")
+name = "Park Map"
+visual_icon_path = "res://desktop_icons/visuals/map.ico"
+headless = null
+aditional_base_cmdline_args = null
+aditional_user_cmdline_args = null
+window_settings = SubResource("Resource_2klbd")
+metadata/_custom_type_script = "uid://buwl8kix3gf5p"
+
+[node name="Main" type="Node" unique_id=457579558]
+script = ExtResource("1_ig7tw")
+initial_desktop_icons = Array[ExtResource("2_c651c")]([SubResource("Resource_3wy1v"), SubResource("Resource_omonn")])
+initial_park_desktop_icons = Array[ExtResource("2_c651c")]([SubResource("Resource_18dj2")])
+initial_no_park_window_scene = ExtResource("6_kfbq2")

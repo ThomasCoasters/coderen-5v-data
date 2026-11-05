@@ -11,14 +11,14 @@ transparent_bg = true
 oversampling_override = 1.0
 title = "Error"
 initial_position = 1
-size = Vector2i(400, 400)
+size = Vector2i(400, 97)
 unresizable = true
 borderless = true
 transparent = true
 minimize_disabled = true
 maximize_disabled = true
-content_scale_size = Vector2i(1920, 1111)
 script = ExtResource("1_pyqt1")
+setup_done = true
 window_name = "Error"
 border_parent_override = NodePath("ContentMarginContainer/VBoxContainer")
 border_index_override = 0
@@ -27,9 +27,6 @@ border_properties = Dictionary[StringName, Variant]({
 &"window_icon": SubResource("CompressedTexture2D_pyqt1"),
 &"window_name": "App Window"
 })
-global_dragging = false
-window_icon = SubResource("CompressedTexture2D_pyqt1")
-window_name = "Error"
 metadata/_custom_type_script = "uid://wyrg2bi6c1nu"
 
 [node name="Background" type="NinePatchRect" parent="." unique_id=611470967]
@@ -59,6 +56,7 @@ theme_override_constants/margin_bottom = 6
 
 [node name="VBoxContainer" type="VBoxContainer" parent="ContentMarginContainer" unique_id=1255319670]
 layout_mode = 2
+size_flags_vertical = 0
 theme_override_constants/separation = 0
 
 [node name="InfoContainer" type="PanelContainer" parent="ContentMarginContainer/VBoxContainer" unique_id=1141259124]
@@ -69,6 +67,7 @@ theme = ExtResource("3_2psp4")
 
 [node name="MarginContainer" type="MarginContainer" parent="ContentMarginContainer/VBoxContainer/InfoContainer" unique_id=1571976570]
 layout_mode = 2
+size_flags_vertical = 0
 theme_override_constants/margin_left = 4
 theme_override_constants/margin_top = 4
 theme_override_constants/margin_right = 4
@@ -76,12 +75,13 @@ theme_override_constants/margin_bottom = 4
 
 [node name="VBoxContainer" type="VBoxContainer" parent="ContentMarginContainer/VBoxContainer/InfoContainer/MarginContainer" unique_id=1207511996]
 layout_mode = 2
+size_flags_vertical = 0
 
 [node name="ErrorTextLabel" type="RichTextLabel" parent="ContentMarginContainer/VBoxContainer/InfoContainer/MarginContainer/VBoxContainer" unique_id=975680650]
 unique_name_in_owner = true
 layout_mode = 2
 theme = ExtResource("3_2psp4")
-text = "Hello World"
+text = "Something went wrong"
 fit_content = true
 
 [node name="OKButton" type="Button" parent="ContentMarginContainer/VBoxContainer/InfoContainer/MarginContainer/VBoxContainer" unique_id=1852411524]

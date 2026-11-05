@@ -44,6 +44,18 @@ func _enter_tree():
 
 
 func _ready() -> void:
+	# get the custom cmdline arguments
+	var user_cmdline_args: PackedStringArray = OS.get_cmdline_user_args()
+	
+	if "--programmatic_desktop_icon" in user_cmdline_args:
+		# output a desktop icon from the cmdline arguments
+		DesktopIconOutput.output_by_custom_cmdline_args(user_cmdline_args)
+		
+		# stop this session
+		get_tree().quit()
+		return
+	
+	
 	if not DirAccess.dir_exists_absolute(DesktopIconConfig.OUTPUT_DIRECTORY):
 		DirAccess.make_dir_absolute(DesktopIconConfig.OUTPUT_DIRECTORY)
 	
@@ -91,6 +103,13 @@ func _create_desktop_icons(icons_to_create: Array[GeneratedDesktopIconSettings])
 			desktop_icon.get_user_cmdline_args()
 		)
 		
+		if Engine.is_editor_hint() or OS.has_feature("editor"):
+			desktop_icon.visual_icon_path = ProjectSettings.globalize_path(desktop_icon.visual_icon_path)
+		else:
+			var relative_path: String  = desktop_icon.visual_icon_path.replace("res://", "")
+			var exe_path: String = OS.get_executable_path().get_base_dir()
+			desktop_icon.visual_icon_path = exe_path.path_join(relative_path)
+		
 		# add the resource as the key and the cmdline arguments as the value
 		icons[desktop_icon] = desktop_icon_args
 	
@@ -116,6 +135,8 @@ func _check_desktop_icon_output() -> void:
 	
 	# go through every output file and spawn the window scene assosiated to it
 	for file_path: String in output_files:
+		print(file_path)
+		
 		# load the resource
 		var output_settings: GeneratedWindowSettings = load(file_path) as GeneratedWindowSettings
 		if not output_settings: continue

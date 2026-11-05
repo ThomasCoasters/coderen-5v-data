@@ -5,15 +5,7 @@ extends Resource
 ## The name the desktop icon will have.
 @export var name: String = "PLACEHOLDER"
 
-## The script that runs when opening the desktop icon.
-@export var opening_script: Script = preload("uid://dryu213407es1")
-var opening_script_path: String:
-	get():
-		return opening_script.resource_path
-@export var visual_icon_path: String = "":
-	get():
-		print(visual_icon_path)
-		return ProjectSettings.globalize_path(visual_icon_path)
+@export var visual_icon_path: String = ""
 
 ## if (when the desktop icon is opened) there should NOT be a opening visual.
 @export var headless: bool = true
@@ -36,8 +28,6 @@ func get_base_cmdline_args() -> String:
 	# get a refrence to all the base cmdline arguments
 	var cmdline_args: String = ""
 	
-	# get the script arg based on the opening_script_path variable
-	cmdline_args += ' --script %s' %opening_script_path
 	if headless:
 		cmdline_args += ' --headless'
 	

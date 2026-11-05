@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" uid="uid://b02nw2s1mi36j" path="res://popup_window/runtime/map_displayer/map_window.gd" id="1_ejaqx"]
 [ext_resource type="Script" uid="uid://buwl8kix3gf5p" path="res://desktop_icons/runtime/generated_desktop_icon_settings.gd" id="2_67vt5"]
-[ext_resource type="Script" uid="uid://dryu213407es1" path="res://desktop_icons/icon_scripts/default_icon_script.gd" id="3_y1n5v"]
 [ext_resource type="Script" uid="uid://df67yf61f3bjk" path="res://desktop_icons/runtime/generated_window_settings.gd" id="4_fv6o0"]
 [ext_resource type="Script" uid="uid://ckglbq63wh5h3" path="res://popup_window/runtime/map_displayer/modifiers/attraction_marker_display/attraction_marker_display_modifier.gd" id="4_p4txh"]
 [ext_resource type="Texture2D" uid="uid://wtmvjebpaw26" path="res://desktop_icons/visuals/map.svg" id="6_755vl"]
@@ -66,9 +65,6 @@ border_properties = Dictionary[StringName, Variant]({
 &"window_icon": ExtResource("6_755vl"),
 &"window_name": "Park Map"
 })
-global_dragging = true
-window_icon = ExtResource("6_755vl")
-window_name = " - Park Map"
 
 [node name="NinePatchRect" type="NinePatchRect" parent="." unique_id=692054194]
 texture_filter = 1
@@ -116,6 +112,7 @@ expand_mode = 1
 stretch_mode = 2
 script = ExtResource("7_qs7ew")
 padding_pixels = 100
+max_screen_scale_size = Vector2(0.7, 0.7)
 backup_zoom = 17
 metadata/_custom_type_script = "uid://7svw3f7qhhnl"
 
@@ -130,6 +127,7 @@ size_flags_vertical = 3
 mouse_filter = 1
 
 [node name="ForegroundBackground" type="NinePatchRect" parent="." unique_id=1395064222]
+z_index = 2
 texture_filter = 1
 anchors_preset = 15
 anchor_right = 1.0

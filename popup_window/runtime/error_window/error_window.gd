@@ -24,6 +24,7 @@ func _ready() -> void:
 	
 	ok_button.pressed.connect(close_requested.emit)
 	
+	content_margin_container.resized.connect(func(): size = content_margin_container.size)
 	await get_tree().process_frame
 	
 	size = content_margin_container.size

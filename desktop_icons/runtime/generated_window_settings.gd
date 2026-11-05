@@ -23,6 +23,8 @@ extends Resource
 @export var modifier_script: Script
 @export var should_open_window: bool = false
 
+var programmatic_desktop_icon: bool = true
+
 ## Sets property values of self, based on the (custom) cmdline arguments given.
 ## For getting cmdline arguments from values, see: [method property_values_to_cmdline_args].
 func cmdline_args_to_property_values(cmdline_args: PackedStringArray) -> void:

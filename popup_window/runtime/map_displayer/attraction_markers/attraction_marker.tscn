@@ -1,19 +1,18 @@
 [gd_scene format=3 uid="uid://bhnnv4bd5btjb"]
 
+[ext_resource type="Theme" uid="uid://drannfj12iked" path="res://main/invis_theme.tres" id="1_8q426"]
 [ext_resource type="Texture2D" uid="uid://dkoyoabr5b3xh" path="res://popup_window/runtime/map_displayer/visuals/attraction_marker.svg" id="1_b5knw"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_pkve2"]
+[ext_resource type="Script" uid="uid://cpix65ak4gtnt" path="res://popup_window/runtime/map_displayer/attraction_markers/attraction_marker.gd" id="1_y23se"]
 
 [node name="AttractionMarker" type="Button" unique_id=1216860271]
 offset_left = -11.0
 offset_top = -32.0
 offset_right = 11.0
 pivot_offset_ratio = Vector2(0.5, 1)
-theme_override_styles/normal = SubResource("StyleBoxEmpty_pkve2")
-theme_override_styles/pressed = SubResource("StyleBoxEmpty_pkve2")
-theme_override_styles/hover = SubResource("StyleBoxEmpty_pkve2")
-theme_override_styles/disabled = SubResource("StyleBoxEmpty_pkve2")
-theme_override_styles/focus = SubResource("StyleBoxEmpty_pkve2")
+offset_transform_enabled = true
+offset_transform_pivot_ratio = Vector2(0.5, 1)
+theme = ExtResource("1_8q426")
+script = ExtResource("1_y23se")
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=1909232452]
 layout_mode = 1

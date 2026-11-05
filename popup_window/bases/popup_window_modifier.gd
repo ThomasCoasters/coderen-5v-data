@@ -6,6 +6,7 @@ var window: PopupWindow
 var global_position: Vector2 = Vector2.ZERO
 
 @abstract func refresh() -> void
+@abstract func remove() -> void
 
 func _ready() -> void:
 	var position_parent: Node = get_parent()

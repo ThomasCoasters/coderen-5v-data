@@ -32,11 +32,30 @@ public partial class DesktopIconSpawner : RefCounted
         string iconPath = Path.Combine(desktopPath, iconName + ".lnk");
         // get the path to the godot game executable
         string gameExePath = OS.GetExecutablePath();
-        // get the path to the "res://" folder
-        string resFolderPath = ProjectSettings.GlobalizePath("res://");
-        // get the arguments added to the running of the desktop icon
-        string scriptArguments = $"--path \"{resFolderPath}\"{bonusScriptArguments}";
+        // get the path to the folder that contains the .exe of this program 
+        string exeDir = Path.GetDirectoryName(gameExePath);
+        // refrence to the cmdline arguments that will be added to the desktop icon
+        string scriptArguments;
         
+        // get if this is running in a build version, or editor
+        bool isEditor = Engine.IsEditorHint() || OS.HasFeature("editor");
+
+        if (isEditor)
+        {
+            // get the path to the "res://" folder
+            string resFolderPath = ProjectSettings.GlobalizePath("res://");
+            // get the arguments added to the running of the desktop icon
+            scriptArguments = $"--path \"{resFolderPath}\" --scene \"uid://bm4s1rhk1a26i\" {bonusScriptArguments}".Trim();
+        }
+        else
+        {
+            // if not running in the editor, only have the bonus script args
+            scriptArguments = bonusScriptArguments.Trim();
+        }
+        
+
+
+
 
         // get the type of the powershell program
         Type shellType = Type.GetTypeFromProgID("WScript.Shell");
@@ -45,6 +64,8 @@ public partial class DesktopIconSpawner : RefCounted
         // create a desktop shortcut
         dynamic shortcut = shell.CreateShortcut(iconPath);
 
+        // set the directory the desktop shortcut is running from
+        shortcut.WorkingDirectory = exeDir;
         // set the path of the desktop shortcut
         shortcut.TargetPath = gameExePath;
         // add the arguments of the shortcut

@@ -30,7 +30,6 @@ func _refresh_started(park: ParkID) -> void:
 ## Called when the park map's size changed, also changing the size of the window to match.
 func _refresh_park_map_size() -> void:
 	show()
-	refresh_modifiers()
 	
 	# get the new size of the window, by getting the park map's size and the custom border's size
 	var new_size: Vector2i = Vector2i(park_map_displayer.size)
@@ -43,6 +42,8 @@ func _refresh_park_map_size() -> void:
 	# set the size of the window and the content scale size
 	size = new_size
 	content_scale_size = new_size
+	
+	refresh_modifiers()
 
 
 func _park_changed(new_park: ParkID) -> void:

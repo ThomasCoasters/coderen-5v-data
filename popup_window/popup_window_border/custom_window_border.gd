@@ -99,6 +99,9 @@ func _input(event: InputEvent) -> void:
 	
 	# check if the event that has happened is something to do with mouse buttons
 	if event is InputEventMouseButton:
+		if not event.button_index == MOUSE_BUTTON_LEFT:
+			return
+		
 		# if a mouse button was pressed
 		if event.pressed:
 			# get what is currently being hovered. if it can consume inputs, do nothing.

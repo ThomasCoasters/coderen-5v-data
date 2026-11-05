@@ -17,6 +17,11 @@ boot_splash/bg_color=Color(0.14117648, 0.14117648, 0.14117648, 0)
 boot_splash/show_image=false
 config/icon="res://icon.svg"
 
+[debug]
+
+file_logging/enable_file_logging=true
+file_logging/log_path="user://logs/5vdata.log"
+
 [display]
 
 window/size/viewport_width=1920
@@ -38,7 +43,7 @@ project/assembly_name="coderen 5V data"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/editor_stats/plugin.cfg")
+enabled=PackedStringArray("res://addons/editor_stats/plugin.cfg", "res://addons/raw_ico_saver/plugin.cfg")
 
 [file_customization]
 
