@@ -28,9 +28,6 @@ border_properties = Dictionary[StringName, Variant]({
 &"window_icon": ExtResource("2_3h44w"),
 &"window_name": "App Window"
 })
-global_dragging = false
-window_icon = ExtResource("2_3h44w")
-window_name = "Park Selection"
 metadata/_custom_type_script = "uid://wyrg2bi6c1nu"
 
 [node name="Background" type="NinePatchRect" parent="." unique_id=100547916]

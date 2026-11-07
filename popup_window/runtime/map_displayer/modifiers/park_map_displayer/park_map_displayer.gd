@@ -15,6 +15,9 @@ const MAX_TARGET_TILES: int = 20
 
 const MAX_CONCURRENT_HTTP_REQUESTS: int = 4
 
+const EARTH_RADIUS_METERS = 6371000.0
+
+
 @export_range(0, 200, 1, "or_greater") var padding_pixels: int = 50
 @export var max_screen_scale_size: Vector2 = Vector2(0.85, 0.85)
 var max_size: Vector2 = Vector2i(1920, 1080)
@@ -268,6 +271,52 @@ static func _lon_lat_to_pixel(
 		world_pixel.y - padded_px_nw.y
 	) * image_scale
 
+
+static func _pixel_to_lon_lat(
+	pixel: Vector2,
+	tile_settings: TileSettings,
+	padded_px_nw: Vector2,
+	image_scale: float
+) -> Vector2:
+	var unscaled_pixel = pixel / image_scale
+	
+	var world_pixel = unscaled_pixel + padded_px_nw
+	
+	return _world_pixel_to_lon_lat(world_pixel, tile_settings.zoom)
+
+static func _world_pixel_to_lon_lat(world_pixel: Vector2, zoom_value: int) -> Vector2:
+	var n = pow(2.0, zoom_value)
+	
+	var lon = (world_pixel.x / (n * TILE_SIZE)) * 360.0 - 180.0
+	
+	var y_norm = world_pixel.y / (n * TILE_SIZE)
+	var val = (1.0 - 2.0 * y_norm) * PI
+	var lat_rad = 2.0 * atan(exp(val)) - (PI / 2.0)
+	var lat = rad_to_deg(lat_rad)
+	
+	return Vector2(lon, lat)
+
+
+static func pixel_meter_distance(
+	pixel1: Vector2,
+	pixel2: Vector2,
+	tile_settings: TileSettings,
+	padded_px_nw: Vector2,
+	image_scale: float
+) -> float:
+	var px1 = _pixel_to_lon_lat(pixel1, tile_settings, padded_px_nw, image_scale)
+	var px2 = _pixel_to_lon_lat(pixel2, tile_settings, padded_px_nw, image_scale)
+	
+	var d_lat = deg_to_rad(px2.y - px1.y)
+	var d_lon = deg_to_rad(px2.x - px1.x)
+	
+	var a = sin(d_lat / 2.0) * sin(d_lat / 2.0) + \
+		cos(deg_to_rad(px1.y)) * cos(deg_to_rad(px2.y)) * \
+		sin(d_lon / 2.0) * sin(d_lon / 2.0)
+	
+	return EARTH_RADIUS_METERS * (2.0 * atan2(sqrt(a), sqrt(1.0 - a)))
+
+
 func _calculate_tiles() -> Vector2i:
 	var delta_lon = max(current_tile_settings.max_lon - current_tile_settings.min_lon, 0.0001)
 	
@@ -318,6 +367,6 @@ class TileSettings extends RefCounted:
 	func cords_unidentified() -> bool:
 		return(
 			min_lon == INF and min_lat == INF and max_lon == -INF and max_lat == -INF
-		) or ( 
+		) or (
 			min_lon == 0.0 and min_lat == 0.0 and max_lon == 0.0 and max_lat == 0.0
 		)

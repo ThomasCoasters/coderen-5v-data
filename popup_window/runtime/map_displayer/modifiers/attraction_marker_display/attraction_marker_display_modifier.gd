@@ -18,7 +18,6 @@ func get_generated_window_settings(attraction: AttractionID) -> GeneratedWindowS
 	window_settings.ignore_cap = true
 	window_settings.aditional_values["Attraction"] = attraction
 	
-	
 	return window_settings
 
 func refresh() -> void:

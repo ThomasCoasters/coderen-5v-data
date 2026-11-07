@@ -20,7 +20,7 @@ metadata/_custom_type_script = "uid://df67yf61f3bjk"
 resource_local_to_scene = true
 script = ExtResource("2_67vt5")
 name = "Show Attractions"
-visual_icon_path = "res://desktop_icons/visuals/map.ico"
+visual_icon_path = "res://desktop_icons/visuals/attraction_marker.ico"
 window_settings = SubResource("Resource_vf8wm")
 metadata/_custom_type_script = "uid://buwl8kix3gf5p"
 
@@ -35,7 +35,7 @@ metadata/_custom_type_script = "uid://df67yf61f3bjk"
 resource_local_to_scene = true
 script = ExtResource("2_67vt5")
 name = "Park Paths"
-visual_icon_path = "res://desktop_icons/visuals/map.ico"
+visual_icon_path = "res://desktop_icons/visuals/park_paths.ico"
 window_settings = SubResource("Resource_obsb7")
 metadata/_custom_type_script = "uid://buwl8kix3gf5p"
 
@@ -65,6 +65,9 @@ border_properties = Dictionary[StringName, Variant]({
 &"window_icon": ExtResource("6_755vl"),
 &"window_name": "Park Map"
 })
+global_dragging = true
+window_icon = ExtResource("6_755vl")
+window_name = " - Park Map"
 
 [node name="NinePatchRect" type="NinePatchRect" parent="." unique_id=692054194]
 texture_filter = 1

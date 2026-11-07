@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://ctepg2rx4pfat"]
 
 [ext_resource type="Script" uid="uid://bwhcu1xw36hy" path="res://popup_window/runtime/attraction_info_displayer/attraction_info_window.gd" id="1_o31ah"]
-[ext_resource type="Texture2D" uid="uid://dkoyoabr5b3xh" path="res://popup_window/runtime/map_displayer/visuals/attraction_marker.svg" id="2_o31ah"]
+[ext_resource type="Texture2D" uid="uid://dm8hk0kj06mj0" path="res://popup_window/runtime/map_displayer/visuals/attraction_marker.png" id="2_0iboi"]
 [ext_resource type="Texture2D" uid="uid://dm0q76ilbw04c" path="res://popup_window/popup_window_border/visuals/window_bg/window_bg.png" id="3_v4l3o"]
 [ext_resource type="Theme" uid="uid://bndopykkard70" path="res://main/win_98/windows_98.tres" id="4_yfr0m"]
 [ext_resource type="Texture2D" uid="uid://drcajuwn51ys5" path="res://popup_window/popup_window_border/visuals/containers/outline_container_filled.png" id="5_0iboi"]
@@ -36,9 +36,12 @@ border_parent_override = NodePath("ContentMarginContainer/VBoxContainer")
 border_index_override = 0
 border_properties = Dictionary[StringName, Variant]({
 &"global_dragging": false,
-&"window_icon": ExtResource("2_o31ah"),
+&"window_icon": ExtResource("2_0iboi"),
 &"window_name": "App Window"
 })
+global_dragging = false
+window_icon = ExtResource("2_0iboi")
+window_name = " - Info"
 metadata/_custom_type_script = "uid://wyrg2bi6c1nu"
 
 [node name="LiveDataRefreshTimer" type="Timer" parent="." unique_id=933698250]

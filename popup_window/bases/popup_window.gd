@@ -2,6 +2,10 @@
 class_name PopupWindow
 extends Window
 
+
+signal dragged
+
+
 var main: Main
 
 @export_storage var setup_done: bool = false
@@ -68,7 +72,7 @@ func _validate_property(property: Dictionary) -> void:
 		property.usage |= PROPERTY_USAGE_READ_ONLY
 
 func _get_property_list() -> Array[Dictionary]:
-	if Engine.is_editor_hint():
+	if not Engine.is_editor_hint():
 		return []
 	
 	var properties: Array[Dictionary] = []
@@ -216,7 +220,8 @@ func _setup_custom_border() -> void:
 	
 	border_parent.add_child(custom_border)
 	border_parent.move_child(custom_border, border_index_override)
-	custom_border.parent_window = self
+	if not Engine.is_editor_hint():
+		custom_border.parent_window = self
 	
 	if not Engine.is_editor_hint():
 		custom_border.close_requested.connect(close_requested.emit)
@@ -228,7 +233,10 @@ func _handle_window_dragging(event: InputEvent) -> void:
 	
 	if event is InputEventMouseMotion:
 		if custom_border.is_dragging:
-			position = custom_border.get_current_drag_position()
+			var new_pos: Vector2i = custom_border.get_current_drag_position()
+			if not position == new_pos:
+				dragged.emit()
+				position = new_pos
 
 
 func _modifier_close_requested() -> void:

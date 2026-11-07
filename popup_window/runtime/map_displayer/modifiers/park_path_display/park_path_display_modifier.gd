@@ -5,10 +5,12 @@ extends PopupWindowModifier
 const INVIS_THEME = preload("uid://drannfj12iked")
 const CLICK_MARKER = preload("uid://capvxrjlsqcad")
 
-
-const NORMAL_PATH_COLOR: Color = Color(0.902, 0.2, 0.2, 0.91)
-const FASTEST_PATH_COLOR: Color = Color(0.0, 1.0, 0.0, 1.0)
+const NORMAL_PATH_COLOR: Color = Color(0.718, 0.959, 0.853, 0.91)
+const FASTEST_PATH_COLOR: Color = Color(0.216, 0.376, 1.0, 1.0)
 const COMBINE_TOLERANCE: float = 5.0
+
+const WALK_SPEED_M_PER_S: float = 1.3
+const STEP_METERS: float = 0.71
 
 
 var path_holder: Node
@@ -181,7 +183,7 @@ func _draw_park_paths(tile_settings: ParkMapDisplayer.TileSettings) -> void:
 				1.0
 			)
 		
-		await get_tree().process_frame
+		if path_holder.get_child_count() % 4: await get_tree().process_frame
 
 
 func _calculate_path() -> void:
@@ -243,7 +245,7 @@ func _calculate_path() -> void:
 		window.main.create_error_popup("Could not calculate fastest path between points.")
 	path.insert(0, a_star.get_closest_position_in_segment(last_point))
 	path.append(a_star.get_closest_position_in_segment(new_point))
-	
+	_create_data_window(path)
 	
 	fastest_path_line = Line2D.new()
 	fastest_path_line.joint_mode = Line2D.LINE_JOINT_ROUND
@@ -277,3 +279,67 @@ func _calculate_path() -> void:
 			FASTEST_PATH_COLOR,
 			0.5
 		)
+
+
+
+func _create_data_window(path: PackedVector2Array) -> void:
+	var distance: float = calculate_distance(path)
+	distance = snappedf(distance, 0.1)
+	var distance_data: DistanceData = DistanceData.new()
+	distance_data.distance = distance
+	
+	var walk_time: TimeData = seconds_to_time(meters_to_seconds(distance))
+	var step_count: int = meters_to_steps(distance)
+	
+	
+	var window_settings: GeneratedWindowSettings = GeneratedWindowSettings.new()
+	
+	window_settings.window_scene = preload("uid://fequey4u5qqw")
+	window_settings.ignore_cap = true
+	window_settings.aditional_values["distance_data"] = distance_data
+	window_settings.aditional_values["steps"] = step_count
+	window_settings.aditional_values["time"] = walk_time
+	@warning_ignore("integer_division")
+	window_settings.aditional_values["position"] = path[path.size() / 2] + Vector2(window.position)
+	
+	DesktopIconOutput.output_by_window_settings(window_settings)
+	
+
+
+func calculate_distance(path: PackedVector2Array) -> float:
+	var total_distance: float = 0.0
+	var last_pos: Vector2 = Vector2.INF
+	
+	for path_pos: Vector2 in path:
+		if not last_pos == Vector2.INF:
+			total_distance += ParkMapDisplayer.pixel_meter_distance(
+				last_pos,
+				path_pos,
+				window.park_map_displayer.current_tile_settings,
+				window.park_map_displayer.padded_pixels_northwest,
+				window.park_map_displayer.current_image_scale
+			)
+		
+		last_pos = path_pos
+	
+	return total_distance
+
+
+func meters_to_seconds(meters: float) -> int:
+	return roundi(meters * WALK_SPEED_M_PER_S)
+
+func meters_to_steps(meters: float) -> int:
+	return roundi(meters / STEP_METERS)
+
+func seconds_to_time(seconds: float) -> TimeData:
+	var minutes: int = floori(seconds/60)
+	var hours: int = floori(float(minutes)/60)
+	seconds -= minutes * 60
+	minutes -= hours * 60
+	
+	var time_data: TimeData = TimeData.new()
+	time_data.seconds = seconds
+	time_data.minutes = minutes
+	time_data.hours = hours
+	
+	return time_data
