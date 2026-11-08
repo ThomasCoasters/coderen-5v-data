@@ -19,6 +19,8 @@ var main: Main
 
 @export var initial_desktop_icons: Array[GeneratedDesktopIconSettings]
 
+@export var exclude_from_taskbar: bool = false
+
 @export_group("Modifiers")
 @export var modifier_parent_node: CanvasItem
 var modifiers: Dictionary[PopupWindowModifier, String]
@@ -65,6 +67,10 @@ func _enter_tree() -> void:
 	borderless = false
 	borderless = true
 	_setup_custom_border()
+	
+	if not Engine.is_editor_hint():
+		if exclude_from_taskbar:
+			DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_NO_FOCUS, true, get_window_id())
 
 
 func _validate_property(property: Dictionary) -> void:
@@ -110,18 +116,20 @@ func _get_property_list() -> Array[Dictionary]:
 
 
 func _get(property: StringName) -> Variant:
-	if border_properties.has(property):
-		return border_properties[property] 
+	if border_properties:
+		if border_properties.has(property):
+			return border_properties[property] 
 	
 	return null
 
 func _set(property: StringName, value: Variant) -> bool:
-	if border_properties.has(property):
-		border_properties[property] = value
-		
+	if border_properties and custom_border:
 		if border_properties.has(property):
-			custom_border.set(property, value)
-		return true
+			border_properties[property] = value
+			
+			if border_properties.has(property):
+				custom_border.set(property, value)
+			return true
 	
 	return false
 

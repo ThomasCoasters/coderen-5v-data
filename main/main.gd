@@ -284,8 +284,10 @@ func load_current_park() -> ParkID:
 func create_error_popup(
 	error_text: String = "Something went wrong.",
 	bbcode_enabled: bool = false
-) -> void:
+) -> ErrorWindow:
 	var error_popup: ErrorWindow = ErrorWindow.SCENE.instantiate()
 	error_popup.error_text = error_text
 	error_popup.bbcode_enabled = bbcode_enabled
 	spawn_window(error_popup, true, false)
+	
+	return error_popup

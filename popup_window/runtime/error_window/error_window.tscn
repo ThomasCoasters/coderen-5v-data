@@ -11,7 +11,7 @@ transparent_bg = true
 oversampling_override = 1.0
 title = "Error"
 initial_position = 1
-size = Vector2i(400, 97)
+size = Vector2i(400, 80)
 unresizable = true
 borderless = true
 transparent = true
@@ -27,6 +27,9 @@ border_properties = Dictionary[StringName, Variant]({
 &"window_icon": SubResource("CompressedTexture2D_pyqt1"),
 &"window_name": "App Window"
 })
+global_dragging = false
+window_icon = SubResource("CompressedTexture2D_pyqt1")
+window_name = "Error"
 metadata/_custom_type_script = "uid://wyrg2bi6c1nu"
 
 [node name="Background" type="NinePatchRect" parent="." unique_id=611470967]
@@ -46,7 +49,7 @@ patch_margin_bottom = 6
 unique_name_in_owner = true
 anchors_preset = 10
 anchor_right = 1.0
-offset_bottom = 97.0
+offset_bottom = 80.0
 grow_horizontal = 2
 size_flags_horizontal = 3
 theme_override_constants/margin_left = 6
@@ -81,7 +84,6 @@ size_flags_vertical = 0
 unique_name_in_owner = true
 layout_mode = 2
 theme = ExtResource("3_2psp4")
-text = "Something went wrong"
 fit_content = true
 
 [node name="OKButton" type="Button" parent="ContentMarginContainer/VBoxContainer/InfoContainer/MarginContainer/VBoxContainer" unique_id=1852411524]

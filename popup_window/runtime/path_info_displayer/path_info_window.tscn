@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://fequey4u5qqw"]
 
 [ext_resource type="Script" uid="uid://dtrgtgugklgqy" path="res://popup_window/runtime/path_info_displayer/path_info_window.gd" id="1_gdux3"]
-[ext_resource type="Texture2D" uid="uid://b34dbfw0ko225" path="res://popup_window/runtime/map_displayer/visuals/park_paths.png" id="2_vmmro"]
+[ext_resource type="Texture2D" uid="uid://b34dbfw0ko225" path="res://popup_window/runtime/map_displayer/visuals/park_paths.png" id="2_ye6n2"]
 [ext_resource type="Texture2D" uid="uid://dm0q76ilbw04c" path="res://popup_window/popup_window_border/visuals/window_bg/window_bg.png" id="3_ye6n2"]
 [ext_resource type="Theme" uid="uid://bndopykkard70" path="res://main/win_98/windows_98.tres" id="4_dnwj1"]
 [ext_resource type="StyleBox" uid="uid://cetak7f238vsu" path="res://main/win_98/raised_container_texture.tres" id="5_hyw4v"]
@@ -34,11 +34,11 @@ border_parent_override = NodePath("ContentMarginContainer/ContentContainer")
 border_index_override = 0
 border_properties = Dictionary[StringName, Variant]({
 &"global_dragging": true,
-&"window_icon": ExtResource("2_vmmro"),
+&"window_icon": ExtResource("2_ye6n2"),
 &"window_name": "App Window"
 })
 global_dragging = true
-window_icon = ExtResource("2_vmmro")
+window_icon = ExtResource("2_ye6n2")
 window_name = "Path Info"
 metadata/_custom_type_script = "uid://wyrg2bi6c1nu"
 

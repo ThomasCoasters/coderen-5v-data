@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://b26kb6c2fu8vs"]
+
+[ext_resource type="Script" uid="uid://bgwdp4nflrpkj" path="res://popup_window/runtime/boss_actions/boss_action_manager.gd" id="1_6nmyo"]
+[ext_resource type="PackedScene" uid="uid://dcw5xqn5reqdb" path="res://popup_window/runtime/boss_actions/attacks/window_explode_attack/window_explode_attack.tscn" id="2_4hlgr"]
+[ext_resource type="Texture2D" uid="uid://cyggl6sx2s1d5" path="res://icon.svg" id="2_hntfd"]
+[ext_resource type="Script" uid="uid://dmm7i0dlmodcp" path="res://addons/utilities/windows/TransparentWindowComponent.cs" id="3_uf3s2"]
+
+[node name="BossActionManager" type="Window" unique_id=1772577441]
+transparent_bg = true
+oversampling_override = 1.0
+title = "Boss Action Manager"
+unresizable = true
+borderless = true
+always_on_top = true
+transparent = true
+unfocusable = true
+mouse_passthrough = true
+minimize_disabled = true
+maximize_disabled = true
+script = ExtResource("1_6nmyo")
+attacks = Array[PackedScene]([ExtResource("2_4hlgr")])
+setup_done = true
+window_name = "Boss Action Manager"
+has_custom_border = false
+border_properties = Dictionary[StringName, Variant]({
+&"global_dragging": false,
+&"window_icon": ExtResource("2_hntfd"),
+&"window_name": "App Window"
+})
+metadata/_custom_type_script = "uid://wyrg2bi6c1nu"
+
+[node name="TransparentWindowComponent" type="Node" parent="." unique_id=1722164293]
+script = ExtResource("3_uf3s2")
+metadata/_custom_type_script = "uid://dmm7i0dlmodcp"
+
+[node name="Line2D" type="Line2D" parent="." unique_id=1548260179]
