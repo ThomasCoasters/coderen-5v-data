@@ -1,0 +1,141 @@
+[gd_scene format=3 uid="uid://dgqqg30n2478c"]
+
+[ext_resource type="Script" uid="uid://brekkwrmfxh28" path="res://popup_window/runtime/boss/attacks/ring_popups_attack/ring_popups_attack.gd" id="1_x7bjf"]
+[ext_resource type="Texture2D" uid="uid://dm0q76ilbw04c" path="res://popup_window/popup_window_border/visuals/window_bg/window_bg.png" id="2_hlth2"]
+[ext_resource type="Theme" uid="uid://bndopykkard70" path="res://main/win_98/windows_98.tres" id="3_n73uo"]
+[ext_resource type="Shader" uid="uid://cbcgx1apj8r60" path="res://shaders/grayscale.gdshader" id="4_x7bjf"]
+[ext_resource type="FontFile" uid="uid://cpa1dwcpvcbwg" path="res://main/win_98/MSW98UI-Bold.ttf" id="5_ciuma"]
+[ext_resource type="Script" uid="uid://d00p5ba8od58l" path="res://popup_window/runtime/boss/attacks/fireball/spawners/fireball_circle_spawner.gd" id="6_tr1nx"]
+
+[sub_resource type="Gradient" id="Gradient_m01og"]
+colors = PackedColorArray(0.13301438, 0.19382814, 0.6197453, 1, 0.25897467, 0.36612445, 0.8989567, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_0i4oc"]
+gradient = SubResource("Gradient_m01og")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_67ri8"]
+texture = SubResource("GradientTexture1D_0i4oc")
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_3h44w"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_2x2wl"]
+shader = ExtResource("4_x7bjf")
+shader_parameter/saturation = 0.0
+
+[node name="RingPopupsAttack" type="Control" unique_id=1942073451]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -1720.0
+offset_bottom = -880.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_x7bjf")
+angle_bonus_per_projectile = 14.739999999999956
+projectile_count = 3
+cooldown = 0.06999999999999978
+metadata/_custom_type_script = "uid://dl515fpcos6fd"
+
+[node name="ProjectileCouldown" type="Timer" parent="." unique_id=135646247]
+unique_name_in_owner = true
+wait_time = 0.1
+one_shot = true
+
+[node name="Background" type="NinePatchRect" parent="." unique_id=622977394]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_hlth2")
+patch_margin_left = 6
+patch_margin_top = 6
+patch_margin_right = 6
+patch_margin_bottom = 6
+
+[node name="ContentMarginContainer" type="MarginContainer" parent="." unique_id=22213707]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 6
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ContentMarginContainer" unique_id=616313228]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="CustomWindowBorder" type="PanelContainer" parent="ContentMarginContainer/VBoxContainer" unique_id=972422543]
+custom_minimum_size = Vector2(0, 23)
+custom_maximum_size = Vector2(-1, 23)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+focus_behavior_recursive = 1
+theme_override_styles/panel = SubResource("StyleBoxTexture_67ri8")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ContentMarginContainer/VBoxContainer/CustomWindowBorder" unique_id=601621403]
+layout_mode = 2
+alignment = 1
+
+[node name="VSeparator" type="VSeparator" parent="ContentMarginContainer/VBoxContainer/CustomWindowBorder/HBoxContainer" unique_id=1424615462]
+layout_mode = 2
+theme_override_constants/separation = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_3h44w")
+
+[node name="Container" type="Control" parent="ContentMarginContainer/VBoxContainer/CustomWindowBorder/HBoxContainer" unique_id=1996923326]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="WindowDetailsHBoxContainer" type="HBoxContainer" parent="ContentMarginContainer/VBoxContainer/CustomWindowBorder/HBoxContainer/Container" unique_id=689215645]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+
+[node name="WindowName" type="Label" parent="ContentMarginContainer/VBoxContainer/CustomWindowBorder/HBoxContainer/Container/WindowDetailsHBoxContainer" unique_id=2067726941]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme = ExtResource("3_n73uo")
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("5_ciuma")
+text = "Good Luck"
+vertical_alignment = 1
+text_overrun_behavior = 6
+resize_font_to_fit = true
+minimum_font_size = 16
+maximum_font_size = 16
+
+[node name="InfoContainer" type="PanelContainer" parent="ContentMarginContainer/VBoxContainer" unique_id=862869586]
+texture_filter = 1
+layout_mode = 2
+size_flags_vertical = 3
+theme = ExtResource("3_n73uo")
+
+[node name="FireballCircleSpawner" type="Control" parent="ContentMarginContainer/VBoxContainer/InfoContainer" unique_id=118490771]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource("6_tr1nx")
+angle_bonus_per_projectile = 14.539999999999957
+projectile_count = 3
+cooldown = 0.06999999999999978
+metadata/_custom_type_script = "uid://d00p5ba8od58l"
+
+[node name="ColorRect" type="ColorRect" parent="ContentMarginContainer" unique_id=595714427]
+z_index = 1
+material = SubResource("ShaderMaterial_2x2wl")
+layout_mode = 2

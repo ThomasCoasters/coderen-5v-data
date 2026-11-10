@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://bev6rgakhrgkj"]
+
+[ext_resource type="Script" uid="uid://dhkq88tdu5f7w" path="res://popup_window/runtime/boss/attacks/fireball/fireball.gd" id="1_umx6i"]
+[ext_resource type="Texture2D" uid="uid://btpsjn1r5am8f" path="res://popup_window/runtime/boss/attacks/fireball/orb.png" id="2_umx6i"]
+
+[node name="Fireball" type="Control" unique_id=357750430]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_umx6i")
+speed = 199.9999999999994
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="." unique_id=41365639]
+rect = Rect2(-15, -15, 30, 30)
+
+[node name="Texture" type="Sprite2D" parent="." unique_id=1342848053]
+texture_filter = 1
+texture = ExtResource("2_umx6i")
+
+[connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_exited"]

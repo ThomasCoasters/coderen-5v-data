@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://buwl8kix3gf5p" path="res://desktop_icons/runtime/generated_desktop_icon_settings.gd" id="2_c651c"]
 [ext_resource type="Script" uid="uid://df67yf61f3bjk" path="res://desktop_icons/runtime/generated_window_settings.gd" id="3_3wy1v"]
 [ext_resource type="PackedScene" uid="uid://5eu55bhv4a8w" path="res://popup_window/runtime/map_displayer/map_window.tscn" id="5_3wy1v"]
-[ext_resource type="PackedScene" uid="uid://b26kb6c2fu8vs" path="res://popup_window/runtime/boss_actions/boss_action_manager.tscn" id="6_4dugh"]
+[ext_resource type="PackedScene" uid="uid://b26kb6c2fu8vs" path="res://popup_window/runtime/boss/boss_action_manager.tscn" id="6_4dugh"]
 [ext_resource type="PackedScene" uid="uid://rb45t1a8scgo" path="res://popup_window/runtime/park_selection/park_selection_window.tscn" id="6_kfbq2"]
 
 [sub_resource type="Resource" id="Resource_4dugh"]
