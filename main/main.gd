@@ -44,10 +44,35 @@ func _enter_tree():
 
 
 func _ready() -> void:
+	#var desktop_icon_spawner: DesktopIconSpawner = DesktopIconSpawner.new()
+	#desktop_icon_spawner.SetUserIconHiddenState(false)
+	#await desktop_icon_spawner.DesktopIconHiddenStateChanged
+	
 	# get the custom cmdline arguments
 	var user_cmdline_args: PackedStringArray = OS.get_cmdline_user_args()
 	
 	if "--programmatic_desktop_icon" in user_cmdline_args:
+		var window_settings: GeneratedWindowSettings = GeneratedWindowSettings.new()
+		window_settings.cmdline_args_to_property_values(user_cmdline_args)
+		if window_settings.aditional_values.has("BadApple"):
+			var desktop_icon_spawner: DesktopIconSpawner = DesktopIconSpawner.new()
+			
+			if not window_settings.aditional_values.has("start"):
+				desktop_icon_spawner.SetUserIconHiddenState(true)
+				await desktop_icon_spawner.DesktopIconHiddenStateChanged
+				
+				DesktopIconOutput.output_by_custom_cmdline_args(user_cmdline_args)
+				
+				get_tree().quit()
+				return
+			
+			desktop_icon_spawner.SetUserIconHiddenState(false)
+			await desktop_icon_spawner.DesktopIconHiddenStateChanged
+			DesktopIconSpawner.DeleteDesktopIcon("start")
+			
+			get_tree().quit()
+		
+		
 		# output a desktop icon from the cmdline arguments
 		DesktopIconOutput.output_by_custom_cmdline_args(user_cmdline_args)
 		
@@ -103,12 +128,7 @@ func _create_desktop_icons(icons_to_create: Array[GeneratedDesktopIconSettings])
 			desktop_icon.get_user_cmdline_args()
 		)
 		
-		if Engine.is_editor_hint() or OS.has_feature("editor"):
-			desktop_icon.visual_icon_path = ProjectSettings.globalize_path(desktop_icon.visual_icon_path)
-		else:
-			var relative_path: String  = desktop_icon.visual_icon_path.replace("res://", "")
-			var exe_path: String = OS.get_executable_path().get_base_dir()
-			desktop_icon.visual_icon_path = exe_path.path_join(relative_path)
+		desktop_icon.visual_icon_path = _convert_icon_path(desktop_icon.visual_icon_path)
 		
 		# add the resource as the key and the cmdline arguments as the value
 		icons[desktop_icon] = desktop_icon_args
@@ -135,11 +155,28 @@ func _check_desktop_icon_output() -> void:
 	
 	# go through every output file and spawn the window scene assosiated to it
 	for file_path: String in output_files:
-		print(file_path)
-		
 		# load the resource
 		var output_settings: GeneratedWindowSettings = load(file_path) as GeneratedWindowSettings
 		if not output_settings: continue
+		
+		if output_settings.aditional_values.has("BadApple"):
+			if not output_settings.aditional_values.has("start"):
+				var gen_icon_setting: GeneratedDesktopIconSettings = GeneratedDesktopIconSettings.new()
+				output_settings.aditional_values["start"] = true
+				gen_icon_setting.name = "start"
+				
+				var animated_desktop_icon: DesktopIconAnimator = DesktopIconAnimator.new()
+				add_child(animated_desktop_icon)
+				animated_desktop_icon.StartIconAnimation(
+					gen_icon_setting.name,
+					output_settings.property_values_to_cmdline_args(),
+					BadApplePlayer.get_ico_paths()
+				)
+				
+				generated_desktop_icons.append(gen_icon_setting)
+				add_child(BadApplePlayer.get_audio())
+			continue
+		
 		
 		if output_settings.aditional_values.has("exit_program"):
 			DesktopIconOutput.remove_output_files()
@@ -291,3 +328,12 @@ func create_error_popup(
 	spawn_window(error_popup, true, false)
 	
 	return error_popup
+
+
+static func _convert_icon_path(ico_path: String) -> String:
+	if Engine.is_editor_hint() or OS.has_feature("editor"):
+		return ProjectSettings.globalize_path(ico_path)
+	else:
+		var relative_path: String  = ico_path.replace("res://", "")
+		var exe_path: String = OS.get_executable_path().get_base_dir()
+		return exe_path.path_join(relative_path)

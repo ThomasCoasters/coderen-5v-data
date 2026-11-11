@@ -1,7 +1,9 @@
 using Godot;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
 
@@ -10,6 +12,14 @@ public partial class DesktopIconSpawner : RefCounted
 {
     [Signal]
     public delegate void MultipleIconsProgressChangedEventHandler(float newPercentage);
+    [Signal]
+    public delegate void DesktopIconHiddenStateChangedEventHandler();
+
+    /// <summary>
+    /// The path to the user's desktop folder, used by windows for the current desktop icons
+    /// </summary>
+    private static string desktopPath => System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop);
+
 
     /// <summary>
     /// Creates a new icon on the desktop of the player.
@@ -25,9 +35,6 @@ public partial class DesktopIconSpawner : RefCounted
             return;
         }
 
-
-        // get the path to this user's desktop folder
-        string desktopPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop);
         // get the path the generated desktop icon will be placed
         string iconPath = Path.Combine(desktopPath, iconName + ".lnk");
         // get the path to the godot game executable
@@ -53,10 +60,6 @@ public partial class DesktopIconSpawner : RefCounted
             scriptArguments = bonusScriptArguments.Trim();
         }
         
-
-
-
-
         // get the type of the powershell program
         Type shellType = Type.GetTypeFromProgID("WScript.Shell");
         // create a new powershell program
@@ -76,14 +79,13 @@ public partial class DesktopIconSpawner : RefCounted
         shortcut.Save();
     }
 
+
     /// <summary>
     /// Deletes a desktop icon with the same name as <c>iconName</c>.
     /// </summary>
     /// <param name="iconName">The name the, to be deleted, desktop icon has.</param>
     public static void DeleteDesktopIcon(string iconName)
     {
-        // get the path to this user's desktop folder
-        string desktopPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop);
         // get the path the generated desktop icon was placed
         string iconPath = Path.Combine(desktopPath, iconName + ".lnk");
 
@@ -93,6 +95,25 @@ public partial class DesktopIconSpawner : RefCounted
             File.Delete(iconPath);
         }
     }
+
+
+    /// <summary>
+    /// quickly deletes multiple desktop icons which names match <c>iconNames</c> using multithreading
+    /// </summary>
+    /// <param name="iconNames">The names of desktop icons that should get removed</param>
+    public static void DeleteMultipleIcons(Godot.Collections.Array<String> iconNames)
+    {
+        // only do this if this is running on windows
+        if (!OperatingSystem.IsWindows())
+        {
+            GD.PrintErr("Desktop icons creation is only supported on windows.");
+            return;
+        }
+
+        // multithread the removal of each given desktop icon
+        Parallel.ForEach(iconNames, DeleteDesktopIcon);
+    }
+
 
     /// <summary>
     /// Creates multiple icons given by <c>iconArguments</c> in parallel using multithreading in a quick enviorenment (C# instead of GDScript).
@@ -129,5 +150,90 @@ public partial class DesktopIconSpawner : RefCounted
                 EmitSignal(SignalName.MultipleIconsProgressChanged, progress);
             });
         });
+    }
+
+
+    /// <summary>
+    /// sets all the currently displayed (or hidden) desktop icons to be displayed or hidden, depending on the value of <paramref name="hide"/>.
+    /// </summary>
+    /// <param name="hide">If the desktop icons should be hidden or shown when running this.</param>
+    public async void SetUserIconHiddenState(bool hide)
+    {
+        // only do this if this is running on windows
+        if (!OperatingSystem.IsWindows())
+        {
+            GD.PrintErr("Desktop icons creation is only supported on windows.");
+            return;
+        }
+
+        // get the shared desktop
+        string publicDesktop = System.Environment.GetFolderPath(System.Environment.SpecialFolder.CommonDesktopDirectory);
+
+        // get all the items in the desktops folders and add it to an array
+        string[] localItemPaths = Directory.GetFiles(desktopPath).Concat(Directory.GetDirectories(desktopPath)).ToArray();
+        string[] sharedItemPaths = Directory.GetFiles(publicDesktop).Concat(Directory.GetDirectories(publicDesktop)).ToArray();
+        string[] itemPaths = localItemPaths.Concat(sharedItemPaths).ToArray();
+
+        await Task.Run(() =>
+        {
+            // go through each icons path multithreaded and set it's file attribute to be hidden
+            Parallel.ForEach(itemPaths, path =>
+            {
+                try
+                {
+                    // get the attributes associated with the current file's path
+                    FileAttributes attributes = File.GetAttributes(path);
+                    // get if the file is currently hidden
+                    bool isHidden = attributes.HasFlag(FileAttributes.Hidden);
+
+                    // if the file isn't hidden, and it should, hide it
+                    if (hide && !isHidden)
+                    {
+                        File.SetAttributes(path, attributes | FileAttributes.Hidden | FileAttributes.System);
+                    }
+                    // if it should be visible and isn't, show it again
+                    else if (!hide && isHidden)
+                    {
+                        File.SetAttributes(path, attributes & ~FileAttributes.Hidden & ~FileAttributes.System);
+                    }
+                }
+                catch
+                {
+                    GD.PrintErr($"Could for some silly reason not set file attributes of the file at path: {path}");
+                }
+            });
+        });
+
+        await RefreshFileExplorerCache();
+        
+
+        EmitSignal(SignalName.DesktopIconHiddenStateChanged);
+    }
+
+
+    /// <summary>
+    /// Fully restarts FileEplorer to refresh the cache
+    /// </summary>
+    private static async Task RefreshFileExplorerCache()
+    {
+        try
+        {
+            // use a process to kill and restart file explorer, so this is awaitable
+            using var process = Process.Start(new ProcessStartInfo
+            {
+                FileName = "cmd.exe",
+                Arguments = "/c taskkill /f /im explorer.exe && start explorer.exe",
+                CreateNoWindow = true,
+                UseShellExecute = false
+            });
+    
+            // if the process exists, wait unitll it is finished
+            if (process != null)
+                await process.WaitForExitAsync();
+        }
+        catch (Exception ex)
+        {
+            GD.PrintErr($"Failed to restart explorer: {ex.Message}");
+        }
     }
 }
