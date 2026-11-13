@@ -11,12 +11,17 @@ var park_icons_generated: bool = false
 @export var initial_window_scene: PackedScene
 @export var initial_no_park_window_scene: PackedScene
 
+@export var unhide_desktop_icons_on_start: bool = false
+
 ## All the desktop icons that were generated through the runtime of the programm.
 var generated_desktop_icons: Array[GeneratedDesktopIconSettings]
 
 var open_windows: Dictionary[String, PopupWindow]
 
 var current_park: ParkID
+var animated_bad_apple_desktop_icon: DesktopIconAnimator
+var bad_apple_player: BadApplePlayer
+
 
 func _enter_tree():
 	# make the window invis from the boot screen
@@ -44,20 +49,24 @@ func _enter_tree():
 
 
 func _ready() -> void:
-	#var desktop_icon_spawner: DesktopIconSpawner = DesktopIconSpawner.new()
-	#desktop_icon_spawner.SetUserIconHiddenState(false)
-	#await desktop_icon_spawner.DesktopIconHiddenStateChanged
+	#var max_desktop_icons: Vector2i = Vector2i.ZERO
+	#
+	#while max_desktop_icons.x < 5 or max_desktop_icons.x > 200 or max_desktop_icons.y < 5 or max_desktop_icons.y > 200:
+	#	await get_tree().create_timer(0.5).timeout
+	#	print(max_desktop_icons)
+	#	max_desktop_icons = DesktopIconCalculator.GetMaxDesktopIcons(DisplayServer.screen_get_size())
 	
 	# get the custom cmdline arguments
 	var user_cmdline_args: PackedStringArray = OS.get_cmdline_user_args()
 	
 	if "--programmatic_desktop_icon" in user_cmdline_args:
+		process_mode = Node.PROCESS_MODE_DISABLED
 		var window_settings: GeneratedWindowSettings = GeneratedWindowSettings.new()
 		window_settings.cmdline_args_to_property_values(user_cmdline_args)
 		if window_settings.aditional_values.has("BadApple"):
 			var desktop_icon_spawner: DesktopIconSpawner = DesktopIconSpawner.new()
 			
-			if not window_settings.aditional_values.has("start"):
+			if not window_settings.aditional_values.has("Start"):
 				desktop_icon_spawner.SetUserIconHiddenState(true)
 				await desktop_icon_spawner.DesktopIconHiddenStateChanged
 				
@@ -66,9 +75,16 @@ func _ready() -> void:
 				get_tree().quit()
 				return
 			
+			if not window_settings.aditional_values.has("AnimatedBadAppleIcon"):
+				DesktopIconSpawner.DeleteDesktopIcon("Start")
+				
+				DesktopIconOutput.output_by_custom_cmdline_args(user_cmdline_args)
+				
+				get_tree().quit()
+				return
+			
 			desktop_icon_spawner.SetUserIconHiddenState(false)
 			await desktop_icon_spawner.DesktopIconHiddenStateChanged
-			DesktopIconSpawner.DeleteDesktopIcon("start")
 			
 			get_tree().quit()
 		
@@ -79,6 +95,12 @@ func _ready() -> void:
 		# stop this session
 		get_tree().quit()
 		return
+	
+	
+	if unhide_desktop_icons_on_start:
+		var temp_desktop_icon_spawner: DesktopIconSpawner = DesktopIconSpawner.new()
+		temp_desktop_icon_spawner.SetUserIconHiddenState(false)
+		await temp_desktop_icon_spawner.DesktopIconHiddenStateChanged
 	
 	
 	if not DirAccess.dir_exists_absolute(DesktopIconConfig.OUTPUT_DIRECTORY):
@@ -135,7 +157,7 @@ func _create_desktop_icons(icons_to_create: Array[GeneratedDesktopIconSettings])
 	
 	# spawn the desktop icons
 	var icon_spawner: DesktopIconSpawner = DesktopIconSpawner.new()
-	icon_spawner.CreateMultipleIconsParallel(icons)
+	icon_spawner.CreateMultipleIcons(icons)
 
 
 ## Deletes the desktop icons provided by [param icons_to_delete].
@@ -160,21 +182,36 @@ func _check_desktop_icon_output() -> void:
 		if not output_settings: continue
 		
 		if output_settings.aditional_values.has("BadApple"):
-			if not output_settings.aditional_values.has("start"):
+			print(output_settings.aditional_values)
+			if not output_settings.aditional_values.has("Start"):
 				var gen_icon_setting: GeneratedDesktopIconSettings = GeneratedDesktopIconSettings.new()
-				output_settings.aditional_values["start"] = true
-				gen_icon_setting.name = "start"
+				output_settings.aditional_values["Start"] = true
+				gen_icon_setting.name = "Start"
 				
-				var animated_desktop_icon: DesktopIconAnimator = DesktopIconAnimator.new()
-				add_child(animated_desktop_icon)
-				animated_desktop_icon.StartIconAnimation(
+				animated_bad_apple_desktop_icon = DesktopIconAnimator.new()
+				add_child(animated_bad_apple_desktop_icon)
+				animated_bad_apple_desktop_icon.StartIconAnimation(
 					gen_icon_setting.name,
-					output_settings.property_values_to_cmdline_args(),
-					BadApplePlayer.get_ico_paths()
+					"--headless ++" + output_settings.property_values_to_cmdline_args(),
+					BadAppleInfo.get_ico_paths(),
+					1
 				)
 				
 				generated_desktop_icons.append(gen_icon_setting)
-				add_child(BadApplePlayer.get_audio())
+				animated_bad_apple_desktop_icon.add_child(BadAppleInfo.get_audio())
+				continue
+			
+			
+			if not output_settings.aditional_values.has("AnimatedBadAppleIcon"):
+				animated_bad_apple_desktop_icon.StopAndCleanupAnimation("Start")
+				animated_bad_apple_desktop_icon.queue_free()
+				bad_apple_player = BadApplePlayer.new()
+				add_child(bad_apple_player)
+			else:
+				if bad_apple_player:
+					bad_apple_player._remove_all_icons()
+					bad_apple_player.queue_free()
+			
 			continue
 		
 		
@@ -185,6 +222,7 @@ func _check_desktop_icon_output() -> void:
 				DesktopIconSpawner.DeleteDesktopIcon(generated_desktop_icon.name)
 			
 			get_tree().quit()
+			return
 		
 		# check if it exists and has a window scene provided
 		if output_settings.window_scene:

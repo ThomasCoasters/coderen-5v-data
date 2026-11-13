@@ -1,9 +1,10 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 
@@ -11,7 +12,9 @@ using System.Threading.Tasks;
 public partial class DesktopIconSpawner : RefCounted
 {
     [Signal]
-    public delegate void MultipleIconsProgressChangedEventHandler(float newPercentage);
+    public delegate void MultipleIconsCreationProgressChangedEventHandler(float newPercentage);
+    [Signal]
+    public delegate void MultipleIconsCreationFinishedEventHandler();
     [Signal]
     public delegate void DesktopIconHiddenStateChangedEventHandler();
 
@@ -20,6 +23,14 @@ public partial class DesktopIconSpawner : RefCounted
     /// </summary>
     private static string desktopPath => System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop);
 
+
+    [DllImport("shell32.dll", CharSet = CharSet.Auto)]
+    private static extern void SHChangeNotify(int wEventId, uint uFlags, IntPtr dwItem1, IntPtr dwItem2);
+
+    private const int SHCNE_UPDATEITEM = 0x00002000;
+    private const int SHCNE_UPDATEDIR = 0x00001000;
+    private const uint SHCNF_PATHW = 0x0005;
+    private const uint SHCNF_FLUSH = 0x1000;
 
     /// <summary>
     /// Creates a new icon on the desktop of the player.
@@ -116,6 +127,50 @@ public partial class DesktopIconSpawner : RefCounted
 
 
     /// <summary>
+    /// Creates multiple icons given by <c>iconArguments</c> in a quick enviorenment (C# instead of GDScript).
+    /// </summary>
+    /// <param name="iconArguments">The arguments the generated shortcut should have with the name first and then the argument that fits that name.</param>
+    public void CreateMultipleIcons(Godot.Collections.Dictionary<Resource, String> iconArguments)
+    {
+        // get refrences to the total icons there are to be made and how many are already made
+        int total_icons = iconArguments.Count;
+
+        // create the given icons in another thread, so the main game can keep running through icon creation
+        Task.Run(() =>
+        {
+            // get the godot dictionary as a C# List
+            List<KeyValuePair<Resource, string>> icons = iconArguments.ToList();
+
+            // go through every icon, to create it
+            for (int i = 0; i < icons.Count; i++)
+            {
+                // get the resource and bonus arguments 
+                KeyValuePair<Resource, string> item = icons[i];
+                Resource resource = item.Key;
+                string bonusArguments = item.Value;
+
+                // get the name of the icon
+                string iconName = resource.Get("name").AsString();
+                if (string.IsNullOrEmpty(iconName)) continue;
+
+                // get the path to the visual icon
+                string visualIconPath = resource.Get("visual_icon_path").AsString();
+
+                // create the desktop icon
+                CreateDesktopIcon(iconName, bonusArguments, visualIconPath);
+
+                // update the signal indicating the amount of icons completed
+                int completed_icons = i + 1;
+                float progress = (float)completed_icons / total_icons * 100.0f;
+                EmitSignal(SignalName.MultipleIconsCreationProgressChanged, progress);
+            }
+            EmitSignal(SignalName.MultipleIconsCreationFinished);
+        });
+
+    }
+
+
+    /// <summary>
     /// Creates multiple icons given by <c>iconArguments</c> in parallel using multithreading in a quick enviorenment (C# instead of GDScript).
     /// </summary>
     /// <param name="iconArguments">The arguments the generated shortcut should have with the name first and then the argument that fits that name.</param>
@@ -123,12 +178,13 @@ public partial class DesktopIconSpawner : RefCounted
     {
         // get refrences to the total icons there are to be made and how many are already made
         int total_icons = iconArguments.Count;
-        int completed_icons = 0;
+        int completed_icon_count = 0;
 
         // create the given icons in another thread, so the main game can keep running through icon creation
         Task.Run(() =>
         {
             // also run the creation in parallel to eachother, so that it is completed faster
+
             Parallel.ForEach(iconArguments, iconArgument =>
             {
                 // check if the key is a valid key, and thus is allowed to be created
@@ -145,10 +201,12 @@ public partial class DesktopIconSpawner : RefCounted
                 CreateDesktopIcon(iconName, iconArgument.Value, iconArgument.Key.Get("visual_icon_path").AsString());
 
                 // get the current percentage how many files are done
-                int done = System.Threading.Interlocked.Increment(ref completed_icons);
-                float progress = (float)done / total_icons * 100.0f;
-                EmitSignal(SignalName.MultipleIconsProgressChanged, progress);
+                int completed_icons = System.Threading.Interlocked.Increment(ref completed_icon_count);
+                float progress = (float)completed_icons / total_icons * 100.0f;
+                EmitSignal(SignalName.MultipleIconsCreationProgressChanged, progress);
             });
+            
+            EmitSignal(SignalName.MultipleIconsCreationFinished);
         });
     }
 
@@ -204,36 +262,40 @@ public partial class DesktopIconSpawner : RefCounted
             });
         });
 
-        await RefreshFileExplorerCache();
+        RefreshDesktopFolder();
         
 
         EmitSignal(SignalName.DesktopIconHiddenStateChanged);
     }
 
 
-    /// <summary>
-    /// Fully restarts FileEplorer to refresh the cache
-    /// </summary>
-    private static async Task RefreshFileExplorerCache()
+    public static void RefreshSingleIcon(string iconName)
     {
-        try
+        string iconPath = Path.Combine(desktopPath, iconName + ".lnk");
+        IntPtr ptr = Marshal.StringToHGlobalAuto(iconPath);
+        // Tell Windows only this specific item changed, and flush the event queue
+        SHChangeNotify(SHCNE_UPDATEITEM, SHCNF_PATHW | SHCNF_FLUSH, ptr, IntPtr.Zero);
+        Marshal.FreeHGlobal(ptr);
+    }
+
+    public static void RefreshMultipleIcons(Godot.Collections.Array<string> iconNames)
+    {
+        foreach (string iconName in iconNames)
         {
-            // use a process to kill and restart file explorer, so this is awaitable
-            using var process = Process.Start(new ProcessStartInfo
-            {
-                FileName = "cmd.exe",
-                Arguments = "/c taskkill /f /im explorer.exe && start explorer.exe",
-                CreateNoWindow = true,
-                UseShellExecute = false
-            });
-    
-            // if the process exists, wait unitll it is finished
-            if (process != null)
-                await process.WaitForExitAsync();
+            string iconPath = Path.Combine(desktopPath, iconName + ".lnk");
+            IntPtr ptr = Marshal.StringToHGlobalAuto(iconPath);
+            SHChangeNotify(SHCNE_UPDATEITEM, SHCNF_PATHW, ptr, IntPtr.Zero);
+            Marshal.FreeHGlobal(ptr);
         }
-        catch (Exception ex)
-        {
-            GD.PrintErr($"Failed to restart explorer: {ex.Message}");
-        }
+        
+        // Single flush at the end to force Explorer to render the queued updates
+        SHChangeNotify(SHCNE_UPDATEITEM, SHCNF_FLUSH, IntPtr.Zero, IntPtr.Zero);
+    }
+
+    public static void RefreshDesktopFolder()
+    {
+        IntPtr ptr = Marshal.StringToHGlobalAuto(desktopPath);
+        SHChangeNotify(SHCNE_UPDATEDIR, SHCNF_PATHW | SHCNF_FLUSH, ptr, IntPtr.Zero);
+        Marshal.FreeHGlobal(ptr);
     }
 }

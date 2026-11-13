@@ -9,11 +9,7 @@ public partial class DesktopIconAnimator : Node
     private bool _isAnimating = false;
     private int _currentFrame = 0;
 
-    /// <summary>
-    /// Starts an asynchronous loop that updates the desktop shortcut's icon at ~2 FPS (every 500ms)
-    /// using DesktopIconSpawner for creation and frame updates.
-    /// </summary>
-    public async void StartIconAnimation(string iconName, string bonusScriptArguments, string[] frameIconPaths)
+    public async void StartIconAnimation(string iconName, string bonusScriptArguments, string[] frameIconPaths, float timePerFrame)
     {
         // Prevent starting multiple concurrent loops if already running
         if (_isAnimating || !OperatingSystem.IsWindows() || frameIconPaths == null || frameIconPaths.Length == 0)
@@ -26,8 +22,7 @@ public partial class DesktopIconAnimator : Node
 
         while (_isAnimating)
         {
-            // Wait 500ms for 2 FPS
-            await ToSignal(GetTree().CreateTimer(0.5f), SceneTreeTimer.SignalName.Timeout);
+            await ToSignal(GetTree().CreateTimer(timePerFrame), SceneTreeTimer.SignalName.Timeout);
 
             if (!_isAnimating) break;
 
@@ -38,7 +33,7 @@ public partial class DesktopIconAnimator : Node
 
                 // Update the shortcut frame using your spawner's built-in creation method
                 DesktopIconSpawner.CreateDesktopIcon(iconName, bonusScriptArguments, frameIconPaths[_currentFrame]);
-                GD.Print(frameIconPaths[_currentFrame]);
+                DesktopIconSpawner.RefreshSingleIcon(iconName);
             }
             catch (Exception)
             {
