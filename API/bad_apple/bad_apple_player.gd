@@ -115,7 +115,6 @@ func display_current_frame() -> void:
 		for x: int in max_desktop_icons.x:
 			var position: Vector2i = Vector2i(x, y)
 			
-			# Define the rectangular region for this specific desktop icon
 			var region_rect := Rect2i(
 				int(x * icon_width),
 				int(y * icon_height),
@@ -126,11 +125,9 @@ func display_current_frame() -> void:
 			region_rect = region_rect.intersection(Rect2i(Vector2i.ZERO, frame_size))
 			if region_rect.has_area() == false:
 				continue
-				
-			# Crop the frame to the icon's sub-region
+			
 			var sub_image: Image = frame.get_region(region_rect)
 			
-			# Calculate the average color of this sub-region
 			var avg_color: Color = _calculate_average_color(sub_image)
 			
 			var is_colored: bool = avg_color.get_luminance() > 0.65

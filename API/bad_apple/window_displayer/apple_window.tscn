@@ -1,0 +1,53 @@
+[gd_scene format=3 uid="uid://bcgwmxkx5r758"]
+
+[ext_resource type="Script" uid="uid://dq2nqc8slcb8q" path="res://API/bad_apple/window_displayer/apple_window.gd" id="1_37dg7"]
+[ext_resource type="Texture2D" uid="uid://dm0q76ilbw04c" path="res://popup_window/popup_window_border/visuals/window_bg/window_bg.png" id="3_7vwb0"]
+[ext_resource type="PackedScene" uid="uid://t8260cy2xvyw" path="res://popup_window/popup_window_border/custom_window_border.tscn" id="4_n27jj"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_37dg7"]
+
+[node name="AppleWindow" type="Control" unique_id=1847725348]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 200.0
+offset_bottom = 200.0
+script = ExtResource("1_37dg7")
+
+[node name="Background" type="NinePatchRect" parent="." unique_id=611470967]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_7vwb0")
+patch_margin_left = 6
+patch_margin_top = 6
+patch_margin_right = 6
+patch_margin_bottom = 6
+
+[node name="ContentMarginContainer" type="MarginContainer" parent="." unique_id=1884089605]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 80.0
+grow_horizontal = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 6
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ContentMarginContainer" unique_id=1255319670]
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_constants/separation = 0
+
+[node name="CustomWindowBorder" parent="ContentMarginContainer/VBoxContainer" unique_id=972422543 instance=ExtResource("4_n27jj")]
+unique_name_in_owner = true
+z_index = 0
+layout_mode = 2
+window_icon = SubResource("CompressedTexture2D_37dg7")
+window_name = "Bad Apple!!"

@@ -27,7 +27,7 @@ const DEFAULT_NAME: String = "App Window"
 ## else is only draggable by clicking on the [member drag_detection_button].
 @export var global_dragging: bool = false
 ## The icon that should be displayed in the [param window_texture_node].
-@export var window_icon: CompressedTexture2D = DEFAULT_ICON:
+@export var window_icon: Texture2D = DEFAULT_ICON:
 	set(value):
 		# set the value of this variable 
 		window_icon = value

@@ -148,6 +148,17 @@ func _create_desktop_icons(icons_to_create: Array[GeneratedDesktopIconSettings])
 			desktop_icon.get_user_cmdline_args()
 		)
 		
+		if desktop_icon.name == "Bad Apple":
+			animated_bad_apple_desktop_icons.append(DesktopIconAnimator.new())
+			add_child(animated_bad_apple_desktop_icons[0])
+			animated_bad_apple_desktop_icons[0].StartIconAnimation(
+				desktop_icon.name,
+				desktop_icon_args,
+				BadAppleInfo.get_ico_paths(),
+				1
+			)
+			continue
+		
 		desktop_icon.visual_icon_path = _convert_icon_path(desktop_icon.visual_icon_path)
 		
 		# add the resource as the key and the cmdline arguments as the value
@@ -182,11 +193,15 @@ func _check_desktop_icon_output() -> void:
 		if output_settings.aditional_values.has("BadApple"):
 			print(output_settings.aditional_values)
 			if not output_settings.aditional_values.has("Start"):
+				for animated_icon: DesktopIconAnimator in animated_bad_apple_desktop_icons:
+					animated_icon.StopAndCleanupAnimation("Bad Apple")
+					animated_icon.queue_free()
+				
 				animated_bad_apple_desktop_icons.clear()
 				
 				
 				var gen_icon_icon_setting: GeneratedDesktopIconSettings = GeneratedDesktopIconSettings.new()
-				var icon_player_settings: GeneratedWindowSettings = output_settings.duplicate()
+				var icon_player_settings: GeneratedWindowSettings = output_settings.duplicate(true)
 				icon_player_settings.aditional_values["Start"] = true
 				icon_player_settings.aditional_values["IconPlayer"] = true
 				gen_icon_icon_setting.name = "Start Icon Version"
@@ -201,7 +216,7 @@ func _check_desktop_icon_output() -> void:
 				)
 				
 				var gen_window_icon_setting: GeneratedDesktopIconSettings = GeneratedDesktopIconSettings.new()
-				var window_player_settings: GeneratedWindowSettings = output_settings.duplicate()
+				var window_player_settings: GeneratedWindowSettings = output_settings.duplicate(true)
 				window_player_settings.aditional_values["Start"] = true
 				window_player_settings.aditional_values["WindowPlayer"] = true
 				gen_window_icon_setting.name = "Start Window Version"
@@ -225,19 +240,21 @@ func _check_desktop_icon_output() -> void:
 				for animated_bad_apple_desktop_icon: DesktopIconAnimator in animated_bad_apple_desktop_icons:
 					animated_bad_apple_desktop_icon.StopAndCleanupAnimation(animated_bad_apple_desktop_icon.currentIconName)
 					animated_bad_apple_desktop_icon.queue_free()
+				DesktopIconSpawner.RefreshDesktopFolder()
 				
 				if output_settings.aditional_values.has("IconPlayer"):
 					bad_apple_player = BadAppleIconPlayer.new()
 					add_child(bad_apple_player)
 				if output_settings.aditional_values.has("WindowPlayer"):
-					create_error_popup("Window-based Bad Apple!! is currently not implemented.")
-				
+					#create_error_popup("Window-based Bad Apple!! is currently not implemented.")
+					var bad_window_apple_player = preload("uid://qu4bw5daxnxi").instantiate()
+					add_child(bad_window_apple_player)
+			
 			if output_settings.aditional_values.has("AnimatedBadAppleIcon"):
 				if bad_apple_player:
 					await bad_apple_player._remove_all_icons()
 					bad_apple_player.queue_free()
-					
-					
+			
 			
 			continue
 		
