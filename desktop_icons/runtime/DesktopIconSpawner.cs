@@ -264,8 +264,56 @@ public partial class DesktopIconSpawner : RefCounted
 
         RefreshDesktopFolder();
         
+        Reference();
+        CallDeferred(MethodName.EmitSignal, SignalName.DesktopIconHiddenStateChanged);
+        Unreference();
+    }
 
-        EmitSignal(SignalName.DesktopIconHiddenStateChanged);
+
+    public static void SetSingleIconHiddenState(string iconName, bool hide)
+    {
+        string iconPath = Path.Combine(desktopPath, iconName + ".lnk");
+
+        try
+        {
+            // get the attributes associated with the current file's path
+            FileAttributes attributes = File.GetAttributes(iconPath);
+            // get if the file is currently hidden
+            bool isHidden = attributes.HasFlag(FileAttributes.Hidden);
+            // if the file isn't hidden, and it should, hide it
+            if (hide && !isHidden)
+            {
+                File.SetAttributes(iconPath, attributes | FileAttributes.Hidden | FileAttributes.System);
+            }
+            // if it should be visible and isn't, show it again
+            else if (!hide && isHidden)
+            {
+                File.SetAttributes(iconPath, attributes & ~FileAttributes.Hidden & ~FileAttributes.System);
+            }
+        }
+        catch
+        {
+            GD.PrintErr($"Could for some silly reason not set file attributes of the file at path: {iconPath}");
+        }
+    }
+
+    public void SetMultipleIconHiddenStateParallel(Godot.Collections.Array<string> iconNames, bool hide)
+    {
+        Parallel.ForEach(iconNames, iconName =>
+        {
+            SetSingleIconHiddenState(iconName, hide);
+        });
+
+        Reference();
+        CallDeferred(MethodName.EmitSignal, SignalName.DesktopIconHiddenStateChanged);
+        Unreference();
+    }
+    public static void SetMultipleIconHiddenState(Godot.Collections.Array<string> iconNames, bool hide)
+    {
+        foreach(string iconName in iconNames)
+        {
+            SetSingleIconHiddenState(iconName, hide);
+        }
     }
 
 
@@ -280,13 +328,7 @@ public partial class DesktopIconSpawner : RefCounted
 
     public static void RefreshMultipleIcons(Godot.Collections.Array<string> iconNames)
     {
-        foreach (string iconName in iconNames)
-        {
-            string iconPath = Path.Combine(desktopPath, iconName + ".lnk");
-            IntPtr ptr = Marshal.StringToHGlobalAuto(iconPath);
-            SHChangeNotify(SHCNE_UPDATEITEM, SHCNF_PATHW, ptr, IntPtr.Zero);
-            Marshal.FreeHGlobal(ptr);
-        }
+        Parallel.ForEach(iconNames, RefreshSingleIcon);
         
         // Single flush at the end to force Explorer to render the queued updates
         SHChangeNotify(SHCNE_UPDATEITEM, SHCNF_FLUSH, IntPtr.Zero, IntPtr.Zero);

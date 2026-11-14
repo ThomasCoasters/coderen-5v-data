@@ -8,6 +8,7 @@ public partial class DesktopIconAnimator : Node
 {
     private bool _isAnimating = false;
     private int _currentFrame = 0;
+    public string currentIconName = "";
 
     public async void StartIconAnimation(string iconName, string bonusScriptArguments, string[] frameIconPaths, float timePerFrame)
     {
@@ -16,6 +17,7 @@ public partial class DesktopIconAnimator : Node
             return;
 
         _isAnimating = true;
+        currentIconName = iconName;
 
         // Ensure the initial shortcut is created using DesktopIconSpawner
         DesktopIconSpawner.CreateDesktopIcon(iconName, bonusScriptArguments, frameIconPaths[0]);

@@ -19,8 +19,8 @@ var generated_desktop_icons: Array[GeneratedDesktopIconSettings]
 var open_windows: Dictionary[String, PopupWindow]
 
 var current_park: ParkID
-var animated_bad_apple_desktop_icon: DesktopIconAnimator
-var bad_apple_player: BadApplePlayer
+var animated_bad_apple_desktop_icons: Array[DesktopIconAnimator]
+var bad_apple_player: BadAppleIconPlayer
 
 
 func _enter_tree():
@@ -76,8 +76,6 @@ func _ready() -> void:
 				return
 			
 			if not window_settings.aditional_values.has("AnimatedBadAppleIcon"):
-				DesktopIconSpawner.DeleteDesktopIcon("Start")
-				
 				DesktopIconOutput.output_by_custom_cmdline_args(user_cmdline_args)
 				
 				get_tree().quit()
@@ -184,33 +182,62 @@ func _check_desktop_icon_output() -> void:
 		if output_settings.aditional_values.has("BadApple"):
 			print(output_settings.aditional_values)
 			if not output_settings.aditional_values.has("Start"):
-				var gen_icon_setting: GeneratedDesktopIconSettings = GeneratedDesktopIconSettings.new()
-				output_settings.aditional_values["Start"] = true
-				gen_icon_setting.name = "Start"
+				animated_bad_apple_desktop_icons.clear()
 				
-				animated_bad_apple_desktop_icon = DesktopIconAnimator.new()
-				add_child(animated_bad_apple_desktop_icon)
-				animated_bad_apple_desktop_icon.StartIconAnimation(
-					gen_icon_setting.name,
-					"--headless ++" + output_settings.property_values_to_cmdline_args(),
+				
+				var gen_icon_icon_setting: GeneratedDesktopIconSettings = GeneratedDesktopIconSettings.new()
+				var icon_player_settings: GeneratedWindowSettings = output_settings.duplicate()
+				icon_player_settings.aditional_values["Start"] = true
+				icon_player_settings.aditional_values["IconPlayer"] = true
+				gen_icon_icon_setting.name = "Start Icon Version"
+				generated_desktop_icons.append(gen_icon_icon_setting)
+				animated_bad_apple_desktop_icons.append(DesktopIconAnimator.new())
+				add_child(animated_bad_apple_desktop_icons[0])
+				animated_bad_apple_desktop_icons[0].StartIconAnimation(
+					gen_icon_icon_setting.name,
+					"--headless ++" + icon_player_settings.property_values_to_cmdline_args(),
 					BadAppleInfo.get_ico_paths(),
 					1
 				)
 				
-				generated_desktop_icons.append(gen_icon_setting)
-				animated_bad_apple_desktop_icon.add_child(BadAppleInfo.get_audio())
+				var gen_window_icon_setting: GeneratedDesktopIconSettings = GeneratedDesktopIconSettings.new()
+				var window_player_settings: GeneratedWindowSettings = output_settings.duplicate()
+				window_player_settings.aditional_values["Start"] = true
+				window_player_settings.aditional_values["WindowPlayer"] = true
+				gen_window_icon_setting.name = "Start Window Version"
+				generated_desktop_icons.append(gen_window_icon_setting)
+				animated_bad_apple_desktop_icons.append(DesktopIconAnimator.new())
+				add_child(animated_bad_apple_desktop_icons[1])
+				animated_bad_apple_desktop_icons[1].StartIconAnimation(
+					gen_window_icon_setting.name,
+					"--headless ++" + window_player_settings.property_values_to_cmdline_args(),
+					BadAppleInfo.get_ico_paths(),
+					1
+				)
+				
+				
+				
+				animated_bad_apple_desktop_icons[0].add_child(BadAppleInfo.get_audio())
 				continue
 			
 			
-			if not output_settings.aditional_values.has("AnimatedBadAppleIcon"):
-				animated_bad_apple_desktop_icon.StopAndCleanupAnimation("Start")
-				animated_bad_apple_desktop_icon.queue_free()
-				bad_apple_player = BadApplePlayer.new()
-				add_child(bad_apple_player)
-			else:
+			if output_settings.aditional_values.get("Start", false):
+				for animated_bad_apple_desktop_icon: DesktopIconAnimator in animated_bad_apple_desktop_icons:
+					animated_bad_apple_desktop_icon.StopAndCleanupAnimation(animated_bad_apple_desktop_icon.currentIconName)
+					animated_bad_apple_desktop_icon.queue_free()
+				
+				if output_settings.aditional_values.has("IconPlayer"):
+					bad_apple_player = BadAppleIconPlayer.new()
+					add_child(bad_apple_player)
+				if output_settings.aditional_values.has("WindowPlayer"):
+					create_error_popup("Window-based Bad Apple!! is currently not implemented.")
+				
+			if output_settings.aditional_values.has("AnimatedBadAppleIcon"):
 				if bad_apple_player:
-					bad_apple_player._remove_all_icons()
+					await bad_apple_player._remove_all_icons()
 					bad_apple_player.queue_free()
+					
+					
 			
 			continue
 		

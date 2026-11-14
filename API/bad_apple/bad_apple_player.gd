@@ -1,4 +1,4 @@
-class_name BadApplePlayer
+class_name BadAppleIconPlayer
 extends Node
 
 
@@ -13,7 +13,7 @@ var desktop_icon_colored: Dictionary[Vector2i, bool]
 var generated_desktop_icons: Array[String]
 var max_desktop_icons: Vector2i
 
-func _init(p_time_per_frame: float = 1.3) -> void:
+func _init(p_time_per_frame: float = 1.8) -> void:
 	time_per_frame = p_time_per_frame
 
 
@@ -31,13 +31,13 @@ func _ready() -> void:
 	
 	await setup_desktop_icons()
 	
-	video_timer.start()
-	video_player.play()
+	video_timer.call_deferred("start")
+	video_player.call_deferred("play")
+	print("Starting soon...")
 	
 
 
 func setup_desktop_icons() -> void:
-	var to_be_created_icons: Array[GeneratedDesktopIconSettings]
 	max_desktop_icons = Vector2i.ZERO
 	
 	while max_desktop_icons.x < 5 or max_desktop_icons.x > 200 or max_desktop_icons.y < 5 or max_desktop_icons.y > 200:
@@ -45,41 +45,57 @@ func setup_desktop_icons() -> void:
 		max_desktop_icons = DesktopIconCalculator.GetMaxDesktopIcons(DisplayServer.screen_get_size())
 		print(max_desktop_icons)
 	
-	for y: int in max_desktop_icons.y:
-		for x: int in max_desktop_icons.x:
-			var position: Vector2i = Vector2i(x, y)
-			desktop_icon_colored[position] = false
-			
-			to_be_created_icons.append(_get_desktop_icon_settings(position, false))
-	
-	to_be_created_icons.sort_custom(
-		func(icon_a: GeneratedDesktopIconSettings, icon_b: GeneratedDesktopIconSettings):
-			var pos_a_array: Array = JSON.parse_string(icon_a.name)
-			var pos_b_array: Array = JSON.parse_string(icon_b.name)
-			var pos_a: Vector2i = Vector2i(pos_a_array[0], pos_a_array[1])
-			var pos_b: Vector2i = Vector2i(pos_b_array[0], pos_b_array[1])
-			
-			# if row above
-			if pos_a.y < pos_b.y:
-				return true
-			
-			# if row below
-			if pos_a.y > pos_b.y:
+	for colored: bool in [true, false]:
+		var to_be_created_icons: Array[GeneratedDesktopIconSettings]
+		for y: int in max_desktop_icons.y:
+			for x: int in max_desktop_icons.x:
+				var position: Vector2i = Vector2i(x, y)
+				desktop_icon_colored[position] = colored
+				
+				to_be_created_icons.append(_get_desktop_icon_settings(position, colored))
+		
+		to_be_created_icons.sort_custom(
+			func(icon_a: GeneratedDesktopIconSettings, icon_b: GeneratedDesktopIconSettings):
+				var icon_a_name: String = icon_a.name
+				var icon_b_name: String = icon_b.name
+				
+				# prioritize black icons
+				if icon_a.name.contains("B") and icon_b.name.contains("W"):
+					print("black prio")
+					return true
+				
+				for illegal_char: String in ["B", "W"]:
+					icon_a_name = icon_a_name.replace(illegal_char, "")
+					icon_b_name = icon_b_name.replace(illegal_char, "")
+				var pos_a_array: Array = JSON.parse_string(icon_a_name)
+				var pos_b_array: Array = JSON.parse_string(icon_b_name)
+				var pos_a: Vector2i = Vector2i(pos_a_array[0], pos_a_array[1])
+				var pos_b: Vector2i = Vector2i(pos_b_array[0], pos_b_array[1])
+				
+				# if row above
+				if pos_a.y < pos_b.y:
+					return true
+				
+				# if row below
+				if pos_a.y > pos_b.y:
+					return false
+				# if same row to the left
+				if pos_a.x < pos_b.x:
+					return true
+				
+				# if same row, to the right
 				return false
-			# if same row to the left
-			if pos_a.x < pos_b.x:
-				return true
-			
-			# if same row, to the right
-			return false
-	)
+		)
+		
+		print("creating: " + str(colored))
+		await _create_icons(to_be_created_icons, colored)
+		print("created: " + str(colored))
 	
-	await _create_icons(to_be_created_icons)
-	await get_tree().create_timer(5).timeout
+	await get_tree().create_timer(15).timeout
 
 
 func display_current_frame() -> void:
-	video_timer.start()
+	print("refresh")
 	
 	var texture: Texture2D = video_player.get_video_texture()
 	if not texture: return
@@ -92,7 +108,8 @@ func display_current_frame() -> void:
 	var icon_width: float = float(frame_size.x) / float(max_desktop_icons.x)
 	var icon_height: float = float(frame_size.y) / float(max_desktop_icons.y)
 	
-	var to_be_updated_icons: Array[GeneratedDesktopIconSettings]
+	var to_be_invis_icons: Array[String]
+	var to_be_visible_icons: Array[String]
 	
 	for y: int in max_desktop_icons.y:
 		for x: int in max_desktop_icons.x:
@@ -116,19 +133,22 @@ func display_current_frame() -> void:
 			# Calculate the average color of this sub-region
 			var avg_color: Color = _calculate_average_color(sub_image)
 			
-			var is_colored: bool = avg_color.get_luminance() > 0.5
+			var is_colored: bool = avg_color.get_luminance() > 0.65
 			
 			if is_colored == desktop_icon_colored[position]: continue
 			desktop_icon_colored[position] = is_colored
-			to_be_updated_icons.append(_get_desktop_icon_settings(position, is_colored))
+			to_be_invis_icons.append(_get_desktop_icon_name(position, not is_colored))
+			to_be_visible_icons.append(_get_desktop_icon_name(position, is_colored))
 	
-	if not to_be_updated_icons.is_empty():
-		await _create_icons(to_be_updated_icons, true)
-		var updated_names: Array[String] = []
-		for icon_settings in to_be_updated_icons:
-			updated_names.append(icon_settings.name)
+	if not to_be_invis_icons.is_empty() and not to_be_visible_icons.is_empty():
+		DesktopIconSpawner.SetMultipleIconHiddenState(to_be_invis_icons, true)
+		DesktopIconSpawner.SetMultipleIconHiddenState(to_be_visible_icons, false)
+		DesktopIconSpawner.RefreshDesktopFolder()
+		
+		print("changed")
+	
+	video_timer.start()
 
-		DesktopIconSpawner.RefreshMultipleIcons(updated_names)
 
 
 func _calculate_average_color(img: Image) -> Color:
@@ -159,7 +179,7 @@ func _calculate_average_color(img: Image) -> Color:
 
 
 func _get_desktop_icon_settings(position: Vector2i, is_colored: bool = false) -> GeneratedDesktopIconSettings:
-	var icon_name: String = JSON.stringify([position.x, position.y])
+	var icon_name: String = _get_desktop_icon_name(position, is_colored)
 	
 	var desktop_icon: GeneratedDesktopIconSettings = GeneratedDesktopIconSettings.new()
 	
@@ -169,7 +189,7 @@ func _get_desktop_icon_settings(position: Vector2i, is_colored: bool = false) ->
 	var window_settings: GeneratedWindowSettings = GeneratedWindowSettings.new()
 	window_settings.aditional_values = {
 		"BadApple": true,
-		"Start": true,
+		"Start": false,
 		"AnimatedBadAppleIcon": true
 	}
 	window_settings.window_scene = preload("res://main/main.tscn")
@@ -178,11 +198,15 @@ func _get_desktop_icon_settings(position: Vector2i, is_colored: bool = false) ->
 	
 	return desktop_icon
 
+func _get_desktop_icon_name(position: Vector2i, is_colored: bool = false) -> String:
+	return JSON.stringify([position.x, position.y]) + ("W" if is_colored else "B")
 
-func _create_icons(to_be_created_icons: Array[GeneratedDesktopIconSettings], multithreaded: bool = false) -> void:
+
+func _create_icons(to_be_created_icons_visible: Array[GeneratedDesktopIconSettings], is_colored: bool) -> void:
 	var icons: Dictionary[GeneratedDesktopIconSettings, String] = {}
+	var icon_names: Array[String]
 	
-	for desktop_icon: GeneratedDesktopIconSettings in to_be_created_icons:
+	for desktop_icon: GeneratedDesktopIconSettings in to_be_created_icons_visible:
 		if not generated_desktop_icons.has(name):
 			generated_desktop_icons.append(desktop_icon.name)
 		
@@ -196,13 +220,18 @@ func _create_icons(to_be_created_icons: Array[GeneratedDesktopIconSettings], mul
 		desktop_icon.visual_icon_path = Main._convert_icon_path(desktop_icon.visual_icon_path)
 		
 		icons[desktop_icon] = desktop_icon_args
+		
+		icon_names.append(desktop_icon.name)
 	
 	# spawn the desktop icons
 	var icon_spawner: DesktopIconSpawner = DesktopIconSpawner.new()
-	if multithreaded: icon_spawner.CreateMultipleIconsParallel(icons)
-	else: icon_spawner.CreateMultipleIcons(icons)
-	
+	icon_spawner.CreateMultipleIcons(icons)
 	await icon_spawner.MultipleIconsCreationFinished
+	
+	if not is_colored:
+		DesktopIconSpawner.SetMultipleIconHiddenState(icon_names, true)
+	
+	DesktopIconSpawner.RefreshDesktopFolder()
 
 
 func _notification(what: int) -> void:
